@@ -6,6 +6,8 @@
 		<meta http-equiv="x-ua-compatible" content="IE=Edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="assets/styles/freechecking.css">
+    <link rel="dns-prefetch" href="//express.easternbank.com/open-deposit/#">
+    <link rel="prerender" href="//express.easternbank.com/open-deposit/#">
 	</head>
 	<body id="skrollr-body">
 
@@ -23,10 +25,68 @@
 					<p>The Eastern Free Checking Account offers a convenient way to do your banking. And for a limited time, you can receive $100 when you qualify for an Eastern Free Checking account.</p>
 					<form action="./" class="form" method="POST">
 						<input class="email-address" placeholder="Your Email" required type="text">
-						<button class="button">Get Started</button>
+						<button class="button-get-started button-top">Get Started</button>
 					</form>
 				</div>
+
+				<div class="free-checking-locate-branch">
+
+
+
+					<div class="icon-target"></div>
+
+					<div class="search-container">
+
+
+						<form action="./">
+							<div class="icon-search"></div>
+							<input class="search-zip" name="search-zip" placeholder="Zip" required type="text">
+						</form>
+
+
+
+						<div class="search-results">
+							<ol>
+								<li class="search-result-item">
+									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
+								</li>
+								<li class="search-result-item">
+									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
+								</li>
+								<li class="search-result-item">
+									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
+								</li>
+								<li class="search-result-item">
+									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
+								</li>
+								<li class="search-result-item">
+									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
+								</li>
+								<li class="search-result-item">
+									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
+								</li>
+								<li class="search-result-item">
+									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
+								</li>
+								<li class="search-result-item">
+									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
+								</li>
+							</ol>
+						</div>
+
+					</div>
+					<div id="map"></div>
+
+
+
+
+				</div>
+
+
+
 			</header>
+
+
 		</div>
 
 		<div class="free-checking-account-goodies" data-start="background-position: 0 0%" data-end="background-position: 0 80;">
@@ -34,7 +94,7 @@
 			<div class="column-wrapper">
 				<div class="column">
 					<img src="assets/images/free-checking-account-goodies-icon-1.png" alt="">
-					<h3>Get <span class="emphasize">$100</span> when you <br> qualify for an account</h3>
+					<h3><span class="emphasize">$100</span> when you <br> qualify for an account</h3>
 				</div>
 				<div class="column">
 					<img src="assets/images/free-checking-account-goodies-icon-2.png" alt="">
@@ -113,19 +173,19 @@
 					<p class="icon-check"><span>✔</span></p>
 				</div>
 			</div>
-			<div class="sticky">
-				<div class="wrapper">
+			<div class="sticker">
+				<div class="form-wrapper">
 					<p>Apply for an <span class="emphasize">Eastern Checking</span> account</p>
 					<form action="./" class="form" method="POST">
 						<input class="email-address" placeholder="Your Email" required type="text">
-						<button class="button">Get Started</button>
+						<button class="button-get-started button-bottom">Get Started</button>
 					</form>
 				</div>
 			</div>
 		</div>
 
 		<footer>
-			<div class="wrapper">
+			<div class="legal-wrapper">
 				<ol>
 					<li><a href="tel://1-800-EASTERN" title="1-800-Eastern">1-800-EASTERN</a></li>
 					<li><a href="https://www.easternbank.com" target="_blank" title="https://www.easternbank.com">www.easternbank.com</a></li>
@@ -142,10 +202,18 @@
 			</div>
 		</footer>
 
+		<div class="curtain">
+			<div class="button-close" title="Close">X</div>
+			<div class="iframe-wrapper">
+				<!-- iframe -->
+				<iframe src=""></iframe>
+			</div>
+		</div>
+
 		<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-562VKT" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-562VKT');</script>
-
 			<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCGrMIrvJVDEQNbQTGZw6xKhss82Tm99Fs&libraries=places"></script>
 			<script src="assets/scripts/freechecking.js"></script>
 	</body>
 </html>
