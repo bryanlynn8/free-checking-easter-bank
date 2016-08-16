@@ -1640,7 +1640,7 @@ $(function() {
 	};
 
 
-	$(".locate-branch").click();
+	// $(".locate-branch").click();
 	// $(".search-zip").val("02138");
 	// setTimeout(function(){
 	// 	$(".icon-search").click();
