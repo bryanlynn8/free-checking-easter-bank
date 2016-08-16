@@ -28,65 +28,26 @@
 						<button class="button-get-started button-top">Get Started</button>
 					</form>
 				</div>
-
 				<div class="free-checking-locate-branch">
-
-
-
 					<div class="icon-target"></div>
-
 					<div class="search-container">
-
-
-						<form action="./">
+						<form action="./" method="POST">
 							<div class="icon-search"></div>
 							<input class="search-zip" name="search-zip" placeholder="Zip" required type="text">
 						</form>
-
-
-
 						<div class="search-results">
 							<ol>
-								<li class="search-result-item">
-									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
-								</li>
-								<li class="search-result-item">
-									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
-								</li>
-								<li class="search-result-item">
-									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
-								</li>
-								<li class="search-result-item">
-									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
-								</li>
-								<li class="search-result-item">
-									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
-								</li>
-								<li class="search-result-item">
-									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
-								</li>
-								<li class="search-result-item">
-									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
-								</li>
-								<li class="search-result-item">
-									<p>Eastern Bank<br>345 Location Ave<br>Boston MA</p>
-								</li>
-							</ol>
-						</div>
 
+							</ol>
+							<div class="search-result-item-detail">
+								<p></p>
+								<p class="button-back">Back</p>
+							</div>
+						</div>
 					</div>
 					<div id="map"></div>
-
-
-
-
 				</div>
-
-
-
 			</header>
-
-
 		</div>
 
 		<div class="free-checking-account-goodies" data-start="background-position: 0 0%" data-end="background-position: 0 80;">
@@ -205,7 +166,6 @@
 		<div class="curtain">
 			<div class="button-close" title="Close">X</div>
 			<div class="iframe-wrapper">
-				<!-- iframe -->
 				<iframe src=""></iframe>
 			</div>
 		</div>

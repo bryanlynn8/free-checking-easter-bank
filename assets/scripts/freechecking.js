@@ -30,6 +30,14 @@ https://github.com/imakewebthings/waypoints/blog/master/licenses.txt
 
 
 $(function() {
+	var branches = [],
+		GeoCodeCalc = {},
+		infoWindow,
+		map,
+		radius = 5,
+		service,
+		mapInitialized = false;
+
 	skrollr.init({
 		forceHeight: false
 	});
@@ -60,34 +68,26 @@ $(function() {
 
 	new Spinner({lines:13,length:0,width:14,radius:36,scale:1.25,corners:1,color:"#000",opacity:0,rotate:0,direction:1,speed:1,trail:42,fps:20,zIndex:2e9,className:"spinner",top:"50%",left:"50%",shadow:!1,hwaccel:!1,position:"absolute"}).spin($(".iframe-wrapper")[0]);
 
-
-	var mapInitialized = false;
-
-
-	$(document).on("click", ".locate-branch, .button-get-started, .button-close, .icon-search, .icon-target", function() {
+	$(document).on("click", ".locate-branch, .button-get-started, .button-close, .icon-search, .icon-target, .button-back, .search-result-item", function() {
 		if($(this).hasClass("locate-branch")) {
 			if($(this).hasClass("active")) {
-
-
-
 				$(".locate-branch").removeClass("active");
 				$(".free-checking-locate-branch").fadeOut(250, function() {
 					$(".search-zip").val("");
+					// branchSearch();
+
+
+					// TODO: reset map positionm, markers, list.
+
+
 				});
-
-
-				// empty results
-
 				return false;
 			} else {
 				if(!mapInitialized) {
 					initializeMap();
 				}
-
 				$(this).addClass("active");
 				$(".free-checking-locate-branch").fadeIn(250);
-
-
 			}
 		} else if($(this).hasClass("button-get-started")) {
 			var form = $(this).closest("form"),
@@ -98,9 +98,9 @@ $(function() {
 				input.focus();
 			} else{
 				var emailAddress = $(this).closest("form").find(".email-address").val();
+				$(".email-address").removeClass("invalid");
 				$("body").addClass("fixed");
 				$(".spinner").show();
-
 				$(".curtain").fadeIn(250, function() {
 					$(".spinner").fadeOut(500);
 					$(".iframe-wrapper").find("iframe").attr("src", "https://express.easternbank.com/open-deposit/#/?&e=" + emailAddress);
@@ -111,26 +111,49 @@ $(function() {
 				$(".email-address").val("");
 				$(".curtain").fadeOut(250, function() {
 					$(".iframe-wrapper").find("iframe").attr("src", "");
-					$(".iframe-wrapper").removeClass("loaded");
 				});
 		} else if($(this).hasClass("icon-search")) {
-			console.log("icon search");
-
-			//fixme
-			$(".search-zip").focus();
-
+			if($(".search-zip").val().length === 0) {
+				$(".search-zip").addClass("invalid").focus();
+			} else {
+				$(".search-zip").removeClass("invalid");
+				$(".button-back").click();
+				branchSearch("search");
+			}
 		} else if($(this).hasClass("icon-target")) {
-			console.log("icon target");
-
+			$(".search-zip").val("");
+			$(".icon-target").addClass("disabled");
 			navigator.geolocation.getCurrentPosition(function(location) {
-				console.log(location.coords.latitude);
-				console.log(location.coords.longitude);
-
-
-		});
-
+				$(".icon-target").removeClass("disabled");
+				branchSearch("geo", location.coords.latitude, location.coords.longitude);
+			});
+		} else if($(this).hasClass("button-back")) {
+			$(".search-result-item-detail").hide();
+			$(".search-results ol").show();
+		} else if($(this).hasClass("search-result-item")) {
+			$(".search-results ol").hide();
+			$(".search-result-item-detail").show();
+			$(".search-result-item-detail").find("p:first-child").html($(this).find("p").html());
 		}
 		return false;
+	});
+
+	$(".search-container form").on("keydown", function(e) {
+		var code = e.keyCode || e.which;
+		// Enter (13).
+		if (code == 13) {
+			$(".icon-search").click();
+			e.preventDefault();
+			return false;
+		}
+	});
+
+	$(document).on("keydown", function(e) {
+		var code = e.keyCode || e.which;
+		// Escape (27).
+		if(code === 27 && $(".curtain").is(':visible')) {
+			$(".button-close").click();
+		}
 	});
 
 
@@ -145,7 +168,7 @@ $(function() {
 			"city": "Boston",
 			"state": "MA",
 			"zip": "02110",
-			"phone": "(617) 526-0170",
+			"phone": "617-526-0170",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00",
 			"lat": "42.355499",
 			"lng": "-71.058296",
@@ -157,7 +180,7 @@ $(function() {
 			"city": "Boston",
 			"state": "MA",
 			"zip": "02110",
-			"phone": "(617) 897-1100",
+			"phone": "617-897-1100",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00",
 			"lat": "42.356548",
 			"lng": "-71.053986",
@@ -169,7 +192,7 @@ $(function() {
 			"city": "Boston",
 			"state": "MA",
 			"zip": "02116",
-			"phone": "(617) 927-2200",
+			"phone": "617-927-2200",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:16:30,6:08:30:18:00,7:09:00:13:00",
 			"lat": "42.347698",
 			"lng": "-71.076202",
@@ -181,7 +204,7 @@ $(function() {
 			"city": "Cambridge",
 			"state": "MA",
 			"zip": "02142",
-			"phone": "(617) 498-2500",
+			"phone": "617-498-2500",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:16:30,6:08:30:16:30",
 			"lat": "42.362850",
 			"lng": "-71.085899",
@@ -193,7 +216,7 @@ $(function() {
 			"city": "Boston",
 			"state": "MA",
 			"zip": "02128",
-			"phone": "(617) 263-2560",
+			"phone": "617-263-2560",
 			"hours": "2:10:00:19:00,3:10:00:19:00,4:10:00:19:00,5:10:00:19:00,6:10:00:19:00,7:10:00:18:00,1:11:00:15:00",
 			"lat": "42.376369",
 			"lng": "-71.039848",
@@ -205,7 +228,7 @@ $(function() {
 			"city": "Boston",
 			"state": "MA",
 			"zip": "02127",
-			"phone": "(617) 464-2700",
+			"phone": "617-464-2700",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:18:00,7:08:30:13:00",
 			"lat": "42.336136",
 			"lng": "-71.046288",
@@ -217,7 +240,7 @@ $(function() {
 			"city": "Cambridge",
 			"state": "MA",
 			"zip": "02139",
-			"phone": "(617) 354-2445",
+			"phone": "617-354-2445",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.365601",
 			"lng": "-71.103996",
@@ -229,7 +252,7 @@ $(function() {
 			"city": "Chelsea",
 			"state": "MA",
 			"zip": "02150",
-			"phone": "(617) 235-8135",
+			"phone": "617-235-8135",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00,7:08:30:12:00",
 			"lat": "42.394699",
 			"lng": "-71.039398",
@@ -241,7 +264,7 @@ $(function() {
 			"city": "Cambridge",
 			"state": "MA",
 			"zip": "02138",
-			"phone": "(617) 354-3616",
+			"phone": "617-354-3616",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.373390",
 			"lng": "-71.120865",
@@ -253,7 +276,7 @@ $(function() {
 			"city": "Brookline",
 			"state": "MA",
 			"zip": "02446",
-			"phone": "(617) 739-2010",
+			"phone": "617-739-2010",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:18:00,6:08:30:18:00,7:09:00:13:00",
 			"lat": "42.343063",
 			"lng": "-71.122688",
@@ -265,7 +288,7 @@ $(function() {
 			"city": "Medford",
 			"state": "MA",
 			"zip": "02155",
-			"phone": "(781) 395-4899",
+			"phone": "781-395-4899",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:19:00,6:09:00:19:00,7:09:00:13:00",
 			"lat": "42.408134",
 			"lng": "-71.093292",
@@ -277,7 +300,7 @@ $(function() {
 			"city": "Everett",
 			"state": "MA",
 			"zip": "02149",
-			"phone": "(617) 387-5115",
+			"phone": "617-387-5115",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:18:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.415627",
 			"lng": "-71.048058",
@@ -289,7 +312,7 @@ $(function() {
 			"city": "Somerville",
 			"state": "MA",
 			"zip": "02144",
-			"phone": "(617) 628-9700",
+			"phone": "617-628-9700",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.395451",
 			"lng": "-71.124367",
@@ -301,7 +324,7 @@ $(function() {
 			"city": "Jamaica Plain",
 			"state": "MA",
 			"zip": "02130",
-			"phone": "(617) 971-9550",
+			"phone": "617-971-9550",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.312126",
 			"lng": "-71.114433",
@@ -313,7 +336,7 @@ $(function() {
 			"city": "Malden",
 			"state": "MA",
 			"zip": "02148",
-			"phone": "(781) 388-1210",
+			"phone": "781-388-1210",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.426800",
 			"lng": "-71.069633",
@@ -325,7 +348,7 @@ $(function() {
 			"city": "Cambridge",
 			"state": "MA",
 			"zip": "02138",
-			"phone": "(617) 234-2255",
+			"phone": "617-234-2255",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.394669",
 			"lng": "-71.140602",
@@ -337,7 +360,7 @@ $(function() {
 			"city": "Boston",
 			"state": "MA",
 			"zip": "02124",
-			"phone": "(617) 929-1906",
+			"phone": "617-929-1906",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.286247",
 			"lng": "-71.064156",
@@ -349,7 +372,7 @@ $(function() {
 			"city": "Watertown",
 			"state": "MA",
 			"zip": "02472",
-			"phone": "(617) 926-7588",
+			"phone": "617-926-7588",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.366402",
 			"lng": "-71.185997",
@@ -361,7 +384,7 @@ $(function() {
 			"city": "Melrose",
 			"state": "MA",
 			"zip": "02176",
-			"phone": "(781) 665-2264",
+			"phone": "781-665-2264",
 			"hours": "2:08:00:18:00,3:08:00:18:00,4:08:00:18:00,5:08:00:19:00,6:08:00:19:00,7:09:00:15:00,1:11:00:15:00",
 			"lat": "42.454800",
 			"lng": "-71.065498",
@@ -373,7 +396,7 @@ $(function() {
 			"city": "Saugus",
 			"state": "MA",
 			"zip": "01906",
-			"phone": "(781) 231-4880",
+			"phone": "781-231-4880",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:16:00,6:09:00:17:00,7:09:00:12:00",
 			"lat": "42.448624",
 			"lng": "-71.009102",
@@ -385,7 +408,7 @@ $(function() {
 			"city": "Quincy",
 			"state": "MA",
 			"zip": "02170",
-			"phone": "(617) 689-1712",
+			"phone": "617-689-1712",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:19:00,6:08:30:17:00,7:08:30:13:00",
 			"lat": "42.266048",
 			"lng": "-71.016655",
@@ -397,7 +420,7 @@ $(function() {
 			"city": "Newton",
 			"state": "MA",
 			"zip": "02459",
-			"phone": "(617) 969-6330",
+			"phone": "617-969-6330",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.330276",
 			"lng": "-71.195000",
@@ -409,7 +432,7 @@ $(function() {
 			"city": "West Roxbury",
 			"state": "MA",
 			"zip": "02132",
-			"phone": "(617) 897-1068",
+			"phone": "617-897-1068",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:18:00,7:09:00:14:00",
 			"lat": "42.280815",
 			"lng": "-71.158401",
@@ -421,7 +444,7 @@ $(function() {
 			"city": "Saugus",
 			"state": "MA",
 			"zip": "01906",
-			"phone": "(781) 231-4890",
+			"phone": "781-231-4890",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:16:00,6:09:00:19:00,7:09:00:12:00",
 			"lat": "42.464802",
 			"lng": "-71.010803",
@@ -433,7 +456,7 @@ $(function() {
 			"city": "Saugus",
 			"state": "MA",
 			"zip": "01906",
-			"phone": "(781) 231-4801",
+			"phone": "781-231-4801",
 			"hours": "2:07:00:20:00,3:07:00:20:00,4:07:00:20:00,5:07:00:20:00,6:07:00:20:00,7:09:00:17:00,1:11:00:15:00",
 			"lat": "42.479645",
 			"lng": "-71.021584",
@@ -445,7 +468,7 @@ $(function() {
 			"city": "Newton",
 			"state": "MA",
 			"zip": "02464",
-			"phone": "(617) 243-8200",
+			"phone": "617-243-8200",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:17:00,7:09:00:12:00",
 			"lat": "42.311798",
 			"lng": "-71.213402",
@@ -457,7 +480,7 @@ $(function() {
 			"city": "Quincy",
 			"state": "MA",
 			"zip": "02169",
-			"phone": "(617) 689-1746",
+			"phone": "617-689-1746",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:19:00,6:08:30:18:00,7:08:30:13:00",
 			"lat": "42.241810",
 			"lng": "-71.003693",
@@ -469,7 +492,7 @@ $(function() {
 			"city": "Lynn",
 			"state": "MA",
 			"zip": "01901",
-			"phone": "(781) 598-8607",
+			"phone": "781-598-8607",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:16:00,6:08:30:16:00,7:09:00:12:00",
 			"lat": "42.462940",
 			"lng": "-70.948463",
@@ -481,7 +504,7 @@ $(function() {
 			"city": "Stoneham",
 			"state": "MA",
 			"zip": "02180",
-			"phone": "(781) 438-3535",
+			"phone": "781-438-3535",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:18:00,6:08:30:18:00,7:09:00:15:00",
 			"lat": "42.490463",
 			"lng": "-71.100220",
@@ -493,7 +516,7 @@ $(function() {
 			"city": "Lynn",
 			"state": "MA",
 			"zip": "01904",
-			"phone": "(781) 598-2520",
+			"phone": "781-598-2520",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:19:00,6:09:00:18:00,7:09:00:15:00,1:11:00:15:00",
 			"lat": "42.472858",
 			"lng": "-70.959846",
@@ -505,7 +528,7 @@ $(function() {
 			"city": "Dedham",
 			"state": "MA",
 			"zip": "02026",
-			"phone": "(617) 689-1754",
+			"phone": "617-689-1754",
 			"hours": "2:09:00:17:00,3:09:00:17:00,4:09:00:17:00,5:09:00:17:00,6:09:00:19:00,7:09:00:13:00,1:11:00:15:00",
 			"lat": "42.249508",
 			"lng": "-71.171143",
@@ -517,7 +540,7 @@ $(function() {
 			"city": "Newton",
 			"state": "MA",
 			"zip": "02466",
-			"phone": "(617) 558-2300",
+			"phone": "617-558-2300",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:18:00,7:09:00:13:00",
 			"lat": "42.347393",
 			"lng": "-71.245880",
@@ -529,7 +552,7 @@ $(function() {
 			"city": "Wakefield",
 			"state": "MA",
 			"zip": "01880",
-			"phone": "(781) 246-2727",
+			"phone": "781-246-2727",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:18:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.502102",
 			"lng": "-71.072067",
@@ -541,7 +564,7 @@ $(function() {
 			"city": "Lynnfield",
 			"state": "MA",
 			"zip": "01940",
-			"phone": "(781) 246-1100",
+			"phone": "781-246-1100",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:19:00,6:08:00:19:00,7:09:00:14:00",
 			"lat": "42.511799",
 			"lng": "-71.036613",
@@ -553,7 +576,7 @@ $(function() {
 			"city": "Lexington",
 			"state": "MA",
 			"zip": "02420",
-			"phone": "(781) 238-4714",
+			"phone": "781-238-4714",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:18:00,7:09:00:12:00",
 			"lat": "42.448532",
 			"lng": "-71.229370",
@@ -565,7 +588,7 @@ $(function() {
 			"city": "Braintree",
 			"state": "MA",
 			"zip": "02184",
-			"phone": "(781) 848-5560",
+			"phone": "781-848-5560",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:19:00,7:08:30:13:00",
 			"lat": "42.220982",
 			"lng": "-70.969933",
@@ -577,7 +600,7 @@ $(function() {
 			"city": "Burlington",
 			"state": "MA",
 			"zip": "01803",
-			"phone": "(781) 238-4700",
+			"phone": "781-238-4700",
 			"hours": "2:09:00:17:00,3:09:00:17:00,4:09:00:17:00,5:09:00:18:00,6:09:00:18:00,7:09:00:13:00",
 			"lat": "42.472198",
 			"lng": "-71.211700",
@@ -589,7 +612,7 @@ $(function() {
 			"city": "Swampscott",
 			"state": "MA",
 			"zip": "01907",
-			"phone": "(781) 599-8100",
+			"phone": "781-599-8100",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:19:00,6:08:00:19:00,7:09:00:13:00,1:11:00:15:00",
 			"lat": "42.478100",
 			"lng": "-70.907837",
@@ -601,7 +624,7 @@ $(function() {
 			"city": "Reading",
 			"state": "MA",
 			"zip": "01867",
-			"phone": "(781) 942-8187",
+			"phone": "781-942-8187",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:18:00,7:09:00:13:00",
 			"lat": "42.522907",
 			"lng": "-71.104736",
@@ -637,7 +660,7 @@ $(function() {
 			"city": "Hingham",
 			"state": "MA",
 			"zip": "02043",
-			"phone": "(781) 740-4830",
+			"phone": "781-740-4830",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:18:00,7:08:30:12:00",
 			"lat": "42.233917",
 			"lng": "-70.880333",
@@ -661,7 +684,7 @@ $(function() {
 			"city": "Weymouth",
 			"state": "MA",
 			"zip": "02189",
-			"phone": "(781) 331-0893",
+			"phone": "781-331-0893",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:19:00,6:08:30:17:00,7:08:30:13:00",
 			"lat": "42.197208",
 			"lng": "-70.929291",
@@ -697,7 +720,7 @@ $(function() {
 			"city": "Randolph",
 			"state": "MA",
 			"zip": "02368",
-			"phone": "(781) 961-1951",
+			"phone": "781-961-1951",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:30,6:08:30:17:30,7:09:00:12:00",
 			"lat": "42.163261",
 			"lng": "-71.043526",
@@ -757,7 +780,7 @@ $(function() {
 			"city": "Marblehead",
 			"state": "MA",
 			"zip": "01945",
-			"phone": "(781) 639-4320",
+			"phone": "781-639-4320",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:17:00,6:09:00:17:00,7:09:00:12:00",
 			"lat": "42.504452",
 			"lng": "-70.850174",
@@ -793,7 +816,7 @@ $(function() {
 			"city": "Stoughton",
 			"state": "MA",
 			"zip": "02072",
-			"phone": "(781) 297-3550",
+			"phone": "781-297-3550",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:17:00,7:08:30:13:00",
 			"lat": "42.135300",
 			"lng": "-71.101700",
@@ -805,7 +828,7 @@ $(function() {
 			"city": "Norwell",
 			"state": "MA",
 			"zip": "02061",
-			"phone": "(781) 871-8650",
+			"phone": "781-871-8650",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:18:00,7:09:00:12:00",
 			"lat": "42.172787",
 			"lng": "-70.880424",
@@ -817,7 +840,7 @@ $(function() {
 			"city": "Canton",
 			"state": "MA",
 			"zip": "02021",
-			"phone": "(781) 828-4448",
+			"phone": "781-828-4448",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:18:00,6:08:30:17:00,7:09:00:12:00",
 			"lat": "42.139362",
 			"lng": "-71.148643",
@@ -829,7 +852,7 @@ $(function() {
 			"city": "Sharon",
 			"state": "MA",
 			"zip": "02067",
-			"phone": "(781) 784-7800",
+			"phone": "781-784-7800",
 			"hours": "2:08:30:15:00,3:08:30:15:00,4:08:30:15:00,5:08:30:18:00,6:08:30:15:00,7:08:30:12:30",
 			"lat": "42.123550",
 			"lng": "-71.179306",
@@ -1009,7 +1032,7 @@ $(function() {
 			"city": "Marshfield",
 			"state": "MA",
 			"zip": "02050",
-			"phone": "(781) 837-0491",
+			"phone": "781-837-0491",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:18:00,7:08:30:13:00",
 			"lat": "42.092087",
 			"lng": "-70.706848",
@@ -1021,7 +1044,7 @@ $(function() {
 			"city": "Duxbury",
 			"state": "MA",
 			"zip": "02332",
-			"phone": "(781) 934-0101",
+			"phone": "781-934-0101",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:18:00,7:08:30:13:00",
 			"lat": "42.025787",
 			"lng": "-70.683968",
@@ -1033,7 +1056,7 @@ $(function() {
 			"city": "Kingston",
 			"state": "MA",
 			"zip": "02364",
-			"phone": "(781) 585-6150",
+			"phone": "781-585-6150",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:18:00,6:09:00:18:00,7:08:30:12:00",
 			"lat": "41.987362",
 			"lng": "-70.712830",
@@ -1317,18 +1340,6 @@ $(function() {
 		}
 	];
 
-	var branches = [],
-		GeoCodeCalc = {},
-		infoWindow,
-		map,
-		ua = navigator.userAgent.toLowerCase(),
-		msie = (ua.indexOf('msie') != -1) ? parseInt(ua.split('msie')[1]) : false,
-		radius = 5,
-		service;
-
-	google.maps.event.addDomListener(window, "load", function(){
-	});
-
 	function initializeMap() {
 		var geocoder = new google.maps.Geocoder(),
 			searchButton = $(".icon-search")[0];
@@ -1345,43 +1356,60 @@ $(function() {
 			zoomControlOptions: {
 				position: google.maps.ControlPosition.RIGHT_TOP
 			}
-		}),
-
-		infoWindow = new google.maps.InfoWindow();
-		service = new google.maps.places.PlacesService(map);
-
-		branchSearch();
-
-		searchButton.addEventListener("click", function(e) {
-			branchSearch("search");
-			e.returnValue = false;
-			e.preventDefault();
-			e.stopPropagation();
 		});
 
+		// infoWindow = new google.maps.InfoWindow();
+		service = new google.maps.places.PlacesService(map);
+		branchSearch();
 	}
 
-	function branchSearch(type) {
+	function branchSearch(type, lat, lng) {
 		var geocoder = new google.maps.Geocoder(),
 			zipCode = $(".search-zip")[0].value;
 
-			console.log("zipCode", zipCode);
+		$(".search-results ol").empty().show();
 
-		if(type === "search"){
-			radius = 5;
-		}else {
-			radius = 1000;
-			zipCode = "02203";
+		for (var i = 0; i < branches.length; i++ ) {
+			branches[i].setMap(null);
 		}
 
-		document.activeElement.blur();
+		branches.length = 0;
 
-		geocoder.geocode({address: zipCode}, function(results, status) {
-			if(status == google.maps.GeocoderStatus.OK) {
-				branchSearchNear(results[0].geometry.location, type);
+
+		if(type === "geo") {
+			console.log("1");
+	    var latlng = new google.maps.LatLng(lat, lng);
+
+			geocoder.geocode({location: latlng}, function(results, status) {
+				if(status == google.maps.GeocoderStatus.OK) {
+					if (results[1]) {
+						zipCode = results[1]["address_components"][7]["short_name"];
+						geocoder.geocode({address: zipCode}, function(results, status) {
+							if(status == google.maps.GeocoderStatus.OK) {
+								radius = 5;
+								branchSearchNear(results[0].geometry.location, type);
+							}
+						});
+					}
+				}
+			});
+		}else {
+			console.log("2");
+			if(type === "search") {
+				radius = 5;
+			} else {
+				radius = 1000;
+				zipCode = "02203";
 			}
-		});
+			geocoder.geocode({address: zipCode}, function(results, status) {
+				if(status == google.maps.GeocoderStatus.OK) {
+					branchSearchNear(results[0].geometry.location, type);
+				}
+			});
+		}
 	}
+
+	locationFilteredResults = [];
 
 	function branchSearchNear(center, type) {
 		var address,
@@ -1398,7 +1426,6 @@ $(function() {
 			hoursOpen,
 			hoursOpenFull,
 			ii = 0,
-			iii = 0,
 			lat,
 			lng,
 			location,
@@ -1410,6 +1437,10 @@ $(function() {
 			userLat = center.lat(),
 			userLng = center.lng();
 
+
+
+		clearBranches();
+
 		for(var i = 0; i < branchList.length; i++) {
 			lat = branchList[i].lat;
 			lng = branchList[i].lng;
@@ -1417,8 +1448,14 @@ $(function() {
 			distance = GeoCodeCalc.CalcDistance(userLat, userLng, lat, lng, 3956);
 
 			name = branchList[i].name;
-			address = branchList[i].address + ", " + branchList[i].city + ", " + branchList[i].state + " " + branchList[i].zip;
+			address = branchList[i].address + " <br> " + branchList[i].city + " " + branchList[i].state + " " + branchList[i].zip;
 			phone = branchList[i].phone;
+
+
+
+			// TODO: make this consitent with sidebar see 			$(".search-results ol").append('<li class="search-result-item"><p>'
+
+
 
 			daysHours = branchList[i].hours.split(",");
 			hours = "";
@@ -1427,103 +1464,149 @@ $(function() {
 			for (ii = 0; ii < numItems; ii++) {
 				firstCharacter = daysHours[ii][0];
 				day = daysHours[ii].substring(0, 2);
-				switch (firstCharacter){
+				switch (firstCharacter) {
 					case "1":
-						dayPrefixed = "Sun";
+						dayPrefixed = "Sunday";
 						break;
 					case "2":
-						dayPrefixed = "Mon";
+						dayPrefixed = "Monday";
 						break;
 					case "3":
-						dayPrefixed = "Tue";
+						dayPrefixed = "Tuesday";
 						break;
 					case "4":
-						dayPrefixed = "Wed";
+						dayPrefixed = "Wednesday";
 						break;
 					case "5":
-						dayPrefixed = "Thu";
+						dayPrefixed = "Thursday";
 						break;
 					case "6":
-						dayPrefixed = "Fri";
+						dayPrefixed = "Friday";
 						break;
 					case "7":
-						dayPrefixed = "Sat";
+						dayPrefixed = "Saturday";
 						break;
 					default:
 						break;
 				}
 
 				hoursOpenFull = daysHours[ii].substring(2, 7);
-		    amPm = (hoursOpenFull.substring(0, 2)).substring() > 11 ? 'pm' : 'am';
+		    amPm = (hoursOpenFull.substring(0, 2)).substring() > 11 ? 'PM' : 'AM';
 				hoursOpen = parseInt(hoursOpenFull);
 				hoursOpen = ((hoursOpen + 11) % 12 + 1).toString();
 				hoursOpen = hoursOpen + ":" + hoursOpenFull.substring(hoursOpenFull.length - 2) + " " + amPm;
 
 				hoursCloseFull = daysHours[ii].substring(daysHours[ii].length - 5);
-		    amPm = (hoursCloseFull.substring(0, 2)).substring() > 11 ? 'pm' : 'am';
+		    amPm = (hoursCloseFull.substring(0, 2)).substring() > 11 ? 'PM' : 'AM';
 				hoursClose = parseInt(hoursCloseFull);
 				hoursClose = ((hoursClose + 11) % 12 + 1).toString();
 				hoursClose = hoursClose + ":" + hoursCloseFull.substring(hoursCloseFull.length - 2) + " " + amPm;
 
-				hours += '<span class="branch-hours-day"><b>' + dayPrefixed +  "</b>: " + hoursOpen +  " - " + hoursClose + '</span>';
-
-				if(iii === 0){
-					hours = '<span class="left">' + hours;
-				}
-
-				if(iii === 3){
-					hours = hours + '</span><span class="right">';
-				}
-
-				iii++;
-
-				if(iii === numItems) {
-					hours =  hours + "</span>";
-					iii = 0;
-				}
+				hours += '<span class="branch-hours-day">' + dayPrefixed +  "</span> " + hoursOpen +  " - " + hoursClose + '<br>';
 			}
 
 			locationResults[i] = new Array (distance, name, lat, lng, address, phone, hours);
 		}
 
-		// Sort the multi-dimensional array numerically.
-		locationResults.sort(function(a, b) {
-			var x = a[0];
-			var y = b[0];
-			return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-		});
 
 		if(locationResults[0][0] > radius) {
 			alert("Sorry, no branches in this area.");
-			branchSearch();
+
+			console.warn("TODO");
+
+			// branchSearch();
+
 			return false;
 		}
 
-		for (var j = 0; j <= locationResults.length-1; j++) {
+
+
+		// // Sort the multi-dimensional array numerically.
+		// locationResults.sort(function(a, b) {
+		// 	var x = a[0];
+		// 	var y = b[0];
+		// });
+
+
+
+		for (var j = 0; j <= locationResults.length - 1; j++) {
 			location = new google.maps.LatLng(parseFloat(locationResults[j][2]), parseFloat(locationResults[j][3]));
 
-			createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
 
-			if(locationResults[j][0] <= 5 && type === "search"){
+			// console.log("creating marker", j);
+
+
+			if(locationResults[j][0] <= 5.9999 && type === "search") {
 				bounds.extend(location);
 				resultRangeCounter++;
-			}else if(type !== "search"){
-				bounds.extend(location);
+				createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
+				console.log("123");
+				locationFilteredResults.push(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
+
+			// $(".search-results ol").append('<li class="search-result-item"><p>'
+			//  + locationResults[j][1] + '<br>'
+			//  + locationResults[j][4] + '<br><span class="hidden"><a href="tel://1-' + locationResults[j][5] + '">'
+			//  + locationResults[j][5] + '</a><br><br>'
+			//  + locationResults[j][6] + '</span></p></li>');
+
+			// console.log("aa", locationResults[j][0]);
+
 			}
+			else if(locationResults[j][0] <= 5.9999 && type === "geo") {
+				bounds.extend(location);
+				createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
+			}
+			else if(type !== "search") {
+				bounds.extend(location);
+				createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
+			}
+
+
 		}
+
+
+		console.log("locationR", locationFilteredResults.length);
 
 		map.fitBounds(bounds);
 
-		if(type === "search" && resultRangeCounter > 10){
-			setTimeout(function(){
-				map.setZoom(map.getZoom() + 1);
-			}, 50);
-		}
-		if(type === "search" && resultRangeCounter == 1){
-			setTimeout(function(){
-				map.setZoom(map.getZoom() - 5);
-			}, 50);
-		}
+		map.panBy(120, 0);
+
+		// if(type === "search" && resultRangeCounter > 10) {
+		// 	setTimeout(function() {
+		// 		// map.setZoom(map.getZoom() + 1);
+
+		// 	console.warn("noooo");
+		// 		map.panBy(120, 0);
+
+		// 		// map.fitBounds(bounds);
+
+		// 	}, 50);
+		// }
+		// if(type === "search" && resultRangeCounter == 1) {
+		// 	console.warn("hi");
+		// 	setTimeout(function() {
+		// 		// map.setZoom(map.getZoom() - 5);
+		// 		map.fitBounds(bounds);
+
+		// 	}, 50);
+		// }
+
+		// if(type === "geo") {
+
+		// }
+
+		// if(type == "geo") {
+		// 	console.log("conyo");
+		// }
+
+
+	}
+
+	function clearBranches() {
+		 for (var i = 0; i < branches.length; i++) {
+       branches[i].setMap(null);
+     }
+     branches.length = 0;
 	}
 
 	function createMarker(location, name, address, phone, hours) {
@@ -1536,14 +1619,11 @@ $(function() {
 		});
 
 		google.maps.event.addListener(marker, "click", function() {
-			infoWindow.setContent(
-				'<span class="branch-name">' + name + '</span>' +
-				'<span class="branch-address">' + address + '</span>' +
-				'<span class="branch-phone">' + phone + '</span>' +
-				'<span class="branch-hours">' + hours + '</span>'
-			);
-			infoWindow.open(map, marker);
+			$(".search-results ol").hide();
+			$(".search-result-item-detail").show();
+			$(".search-result-item-detail").find("p:first-child").html(name + "<br>" + address + "<br>" + phone + "<br><br>" + hours);
 		});
+
 		branches.push(marker);
 	}
 
@@ -1559,4 +1639,10 @@ $(function() {
 		return radius * 2 * Math.asin( Math.min(1, Math.sqrt( ( Math.pow(Math.sin((GeoCodeCalc.DiffRadian(lat1, lat2)) / 2.0), 2.0) + Math.cos(GeoCodeCalc.ToRadian(lat1)) * Math.cos(GeoCodeCalc.ToRadian(lat2)) * Math.pow(Math.sin((GeoCodeCalc.DiffRadian(lng1, lng2)) / 2.0), 2.0) ) ) ) );
 	};
 
+
+	$(".locate-branch").click();
+	// $(".search-zip").val("02138");
+	// setTimeout(function(){
+	// 	$(".icon-search").click();
+	// }, 250);
 });
