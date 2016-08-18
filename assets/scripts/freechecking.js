@@ -1579,8 +1579,8 @@ $(function() {
 	};
 
 
-	$(".locate-branch").click();
-	$(".search-zip").val("02138");
+	// $(".locate-branch").click();
+	// $(".search-zip").val("02138");
 	// setTimeout(function() {
 	// 	// $(".icon-search").click();
 	// }, 250);
