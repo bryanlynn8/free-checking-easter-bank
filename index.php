@@ -10,7 +10,6 @@
     <link rel="prerender" href="//express.easternbank.com/open-deposit/#">
 	</head>
 	<body id="skrollr-body">
-
 		<div class="free-checking-account-hero">
 			<header>
 				<a href="./" class="eastern-bank"><img id="FlexEBLogo" class="logo" src="assets/images/easternbank.png"></a>
@@ -37,7 +36,6 @@
 						</form>
 						<div class="search-results">
 							<ol>
-
 							</ol>
 							<div class="search-result-item-detail">
 								<p></p>

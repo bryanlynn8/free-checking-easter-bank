@@ -32,8 +32,8 @@ https://github.com/imakewebthings/waypoints/blog/master/licenses.txt
 $(function() {
 	var branches = [],
 		GeoCodeCalc = {},
-		infoWindow,
 		map,
+		marker,
 		service,
 		mapInitialized = false;
 
@@ -83,7 +83,6 @@ $(function() {
 				}
 				$(this).addClass("active");
 				$(".free-checking-locate-branch").fadeIn(250, function() {
-					console.log("focus");
 					$(".search-zip").focus();
 				});
 			}
@@ -129,12 +128,64 @@ $(function() {
 			$(".search-result-item-detail").hide();
 			$(".search-results ol").show();
 		} else if($(this).hasClass("search-result-item")) {
+
 			$(".search-results ol").hide();
 			$(".search-result-item-detail").show();
 			$(".search-result-item-detail").find("p:first-child").html($(this).find("p").html());
+
+
+// console.warn("TODO", this.id);
+
+
+
+
+			// console.log("markerID", marker);
+
 		}
 		return false;
 	});
+
+
+	$(document).on({
+		mouseenter: function () {
+			for(var i = 0; i < branches.length; i++) {
+				if(this.id === branches[i].id) {
+					// console.log("yeah", branches[i].icon.url);
+
+
+		// for (var i = 0; i < branches.length; i++) {
+			// branches[i].setMap(null);
+			// console.log("branches",);
+		// }
+
+					// branches[i].icon.url = "assets/images/location-marker-hover.png";
+					// new google.maps.event.trigger( branches[i].id, 'click' );
+
+   // google.maps.event.trigger(marker["pin_80"], 'click');
+// console.log("marker", branches[i]);
+
+			// google.maps.event.trigger(branches[i], 'click', function() {
+			// 	console.log("hhhh");
+			// });
+			// console.log("branches[2]", branches[2]);
+
+			// marker["pin_2"].setIcon("assets/images/location-marker-hover.png");
+            // google.maps.event.trigger(branches[2], 'click');
+				}
+			}
+
+// new google.maps.event.trigger( branches[this.id], 'click' );
+
+			//stuff to do on mouse enter
+		},
+		mouseleave: function () {
+			// console.log("by", this.id);
+			//stuff to do on mouse leave
+		}
+	}, ".search-result-item");
+
+
+
 
 	$(".search-container form").on("keydown", function(e) {
 		var code = e.keyCode || e.which;
@@ -153,7 +204,6 @@ $(function() {
 			$(".button-close").click();
 		}
 	});
-
 
 
 
@@ -1253,7 +1303,7 @@ $(function() {
 			streetViewControl: false,
 			zoomControl: true,
 			zoomControlOptions: {
-				position: google.maps.ControlPosition.RIGHT_TOP
+				position: google.maps.ControlPosition.LEFT_TOP
 			}
 		});
 
@@ -1266,12 +1316,7 @@ $(function() {
 			radius = 5,
 			zipCode = $(".search-zip")[0].value;
 
-			console.log("branchSearch", type);
-
 		if(type === "load") {
-
-console.log("aa");
-
 			clearBranches();
 
 			radius = 1000;
@@ -1288,16 +1333,6 @@ console.log("aa");
 			geocoder.geocode({location: latlng}, function(results, status) {
 				if(status == google.maps.GeocoderStatus.OK) {
 					if(results[1]) {
-						var cityCircle = new google.maps.Circle({
-							strokeColor: "#fff",
-							strokeOpacity: 0.7,
-							strokeWeight: 1,
-							fillColor: "#fff",
-							fillOpacity: 0.5,
-							map: map,
-							center: results[0].geometry.location,
-							radius: Math.sqrt(8046.72) * 100
-						});
 						geocoder.geocode({address: results[1]["formatted_address"]}, function(results, status) {
 							if(status == google.maps.GeocoderStatus.OK) {
 								branchSearchNear(results[0].geometry.location, type, radius);
@@ -1310,16 +1345,6 @@ console.log("aa");
 			radius = 5;
 			geocoder.geocode({address: zipCode}, function(results, status) {
 				if(status == google.maps.GeocoderStatus.OK) {
-					var cityCircle = new google.maps.Circle({
-						strokeColor: "#1875bc",
-						strokeOpacity: 0.7,
-						strokeWeight: 1,
-						fillColor: "#1875bc",
-						fillOpacity: 0.5,
-						map: map,
-						center: results[0].geometry.location,
-						radius: Math.sqrt(8046.72) * 100
-					});
 					branchSearchNear(results[0].geometry.location, type, radius);
 				}
 			});
@@ -1360,7 +1385,7 @@ console.log("aa");
 			distance = GeoCodeCalc.CalcDistance(userLat, userLng, lat, lng, 3956);
 			name = branchList[i].name;
 			address = branchList[i].address + " <br> " + branchList[i].city + " " + branchList[i].state + " " + branchList[i].zip;
-			phone = '<span class="hidden"><a href="tel://1-' + branchList[i].phone + '">'	+ branchList[i].phone + '</a></span>';
+			phone = branchList[i].phone ;
 			daysHours = branchList[i].hours.split(",");
 			hours = "";
 			numItems = daysHours.length;
@@ -1415,46 +1440,50 @@ console.log("aa");
 			}
 		}
 
-		console.log("locationResults3", locationResults.length);
-
 		if(locationResults.length === 0) {
 			alert("Sorry, no branches in this area.");
 			branchSearch("load");
 			return false;
 		}
 
-		// TODO: handle sorting by distance
 
+		// TODO: handle sorting by distance
 		// Sort the multi-dimensional array numerically.
-		// locationResults.sort(function(a, b) {
+		// locationResults = locationResults.sort(function(a, b) {
 		// 	var x = a[0];
 		// 	var y = b[0];
 		// });
 
+
+
+	// $(".search-results ol").empty();
 		// console.log("all locations ", locationResults.length);
 
 		for (var j = 0; j <= locationResults.length - 1; j++) {
-			// console.log("j locationResults", locationResults[j]);
 			location = new google.maps.LatLng(parseFloat(locationResults[j][2]), parseFloat(locationResults[j][3]));
-
-			// console.log("creating marker", j);
 
 			if(type === "load") {
 				bounds.extend(location);
 				resultRangeCounter++;
-				createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
+				createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6], "pin_" + resultRangeCounter);
 				locationFilteredResults.push(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
 			} else if(locationResults[j][0] <= 5 && (type === "geo" || type === "search")) {
 				bounds.extend(location);
 				resultRangeCounter++;
-				// createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
+				// createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6], "pin_" + resultRangeCounter);
 				locationFilteredResults.push(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
 			}
+
+			$(".search-results ol").append('<li class="search-result-item" id="pin_' + resultRangeCounter + '"><p>'
+			 + locationResults[j][1] + '<br>'
+			 + locationResults[j][4] + '<br><span class="hidden"><a href="tel://1-' + locationResults[j][5] + '">'
+			 + locationResults[j][5] + '</a><br><br>'
+			 + locationResults[j][6] + '</span></p></li>');
 		}
 
 		map.fitBounds(bounds);
 
-		if((type === "search" || type === "geo") && resultRangeCounter > 10) {
+		if((type === "search" || type === "geo") && resultRangeCounter >= 10) {
 			map.setZoom(map.getZoom() + 1);
 		}
 		if((type === "search" || type === "geo") && resultRangeCounter == 1) {
@@ -1464,19 +1493,10 @@ console.log("aa");
 	}
 
 
-
-/*
-FIXME
-what is branches array
-*/
-
-
-
-
-
-
-	function createMarker(location, name, address, phone, hours) {
-		var marker = new google.maps.Marker({
+	function createMarker(location, name, address, phone, hours, id) {
+		marker = new google.maps.Marker({
+			clickable: true,
+			id: id,
 			icon: {
 				url: "assets/images/location-marker.png",
 			},
@@ -1484,22 +1504,53 @@ what is branches array
 			position: location
 		});
 
-
 		google.maps.event.addListener(marker, "click", function() {
 
 			// TODO: SCROLL to store
+			// console.log("clickyyy", this.id);
+
+			// if($(".search-result-item:first-child").hasClass("active")) {
+			// 	$(".search-result-item:first-child").removeClass("active");
+			// 	// this.setIcon("assets/images/location-marker.png");
+			// 	$(".search-results ol, .button-back").show();
+			// 	$(".search-result-item-detail").hide();
+			// }
 
 			$(".search-results ol").hide();
-			$(".search-result-item-detail").show();
-			$(".search-result-item-detail").find("p:first-child").html(name + "<br>" + address + "<br>" + phone + "<br><br>" + hours);
+			$(".search-result-item-detail, .button-back").show();
+
+			// console.log("aaa", $(".search-result-item").find("#" + this.id));
+
+
+			// console.log("1- find item in side");
+			// $(".search-result-item:first-child").addClass("active");
+			// $(".search-result-item-detail").find("p:first-child").html($(".search-result-item#pin_6").html());
+
+			$(".search-result-item-detail").find("p:first-child").html(name + '<br>' + address + '<br><span class="hidden"><a href="tel://1-' + phone + '">' + phone + '</a></span><br><br>' + hours);
+
+		});
+
+		marker.addListener("mouseover", function() {
+			var container = $(".search-results"),
+				scrollToItem = $(".search-result-item#" + this.id);
+
+			this.setIcon("assets/images/location-marker-hover.png");
+			$(".search-result-item#" + this.id)[0].scrollIntoView(false);
+
+			container.scrollTop(
+				scrollToItem.offset().top - container.offset().top + container.scrollTop()
+			);
+			$(".search-result-item#" + this.id).addClass("highlight");
+			$(".search-result-item-detail").find("p:first-child").html(name + '<br>' + address + '<br><span class="hidden"><a href="tel://1-' + phone + '">' + phone + '</a></span><br><br>' + hours);
+		});
+
+		marker.addListener("mouseout", function() {
+			this.setIcon("assets/images/location-marker.png");
+			$(".search-result-item#" + this.id).removeClass("highlight");
 		});
 
 		branches.push(marker);
 	}
-
-
-
-
 
 
 
@@ -1512,6 +1563,7 @@ what is branches array
 
 		branches.length = 0;
 		$(".search-results ol").empty().show();
+		$(".search-zip").val("");
 	}
 
 	GeoCodeCalc.ToRadian = function(v) {
@@ -1530,6 +1582,6 @@ what is branches array
 	$(".locate-branch").click();
 	$(".search-zip").val("02138");
 	// setTimeout(function() {
-	// 	$(".icon-search").click();
+	// 	// $(".icon-search").click();
 	// }, 250);
 });
