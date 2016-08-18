@@ -34,7 +34,6 @@ $(function() {
 		GeoCodeCalc = {},
 		infoWindow,
 		map,
-		radius = 5,
 		service,
 		mapInitialized = false;
 
@@ -74,20 +73,19 @@ $(function() {
 				$(".locate-branch").removeClass("active");
 				$(".free-checking-locate-branch").fadeOut(250, function() {
 					$(".search-zip").val("");
-					// branchSearch();
-
-
-					// TODO: reset map positionm, markers, list.
-
-
 				});
 				return false;
 			} else {
 				if(!mapInitialized) {
 					initializeMap();
+				} else {
+					branchSearch("load");
 				}
 				$(this).addClass("active");
-				$(".free-checking-locate-branch").fadeIn(250);
+				$(".free-checking-locate-branch").fadeIn(250, function() {
+					console.log("focus");
+					$(".search-zip").focus();
+				});
 			}
 		} else if($(this).hasClass("button-get-started")) {
 			var form = $(this).closest("form"),
@@ -141,7 +139,7 @@ $(function() {
 	$(".search-container form").on("keydown", function(e) {
 		var code = e.keyCode || e.which;
 		// Enter (13).
-		if (code == 13) {
+		if(code == 13) {
 			$(".icon-search").click();
 			e.preventDefault();
 			return false;
@@ -159,9 +157,18 @@ $(function() {
 
 
 
-
-
 	var branchList = [
+		{
+			"name": "Eastern Bank",
+			"address": "155 Dartmouth Street",
+			"city": "Boston",
+			"state": "MA",
+			"zip": "02116",
+			"phone": "617-927-2200",
+			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:16:30,6:08:30:18:00,7:09:00:13:00",
+			"lat": "42.347698",
+			"lng": "-71.076202"
+		},
 		{
 			"name": "Eastern Bank",
 			"address": "63 Franklin Street",
@@ -171,8 +178,7 @@ $(function() {
 			"phone": "617-526-0170",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00",
 			"lat": "42.355499",
-			"lng": "-71.058296",
-			"distance": "0.3463867415285906"
+			"lng": "-71.058296"
 		},
 		{
 			"name": "Eastern Bank",
@@ -183,20 +189,7 @@ $(function() {
 			"phone": "617-897-1100",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00",
 			"lat": "42.356548",
-			"lng": "-71.053986",
-			"distance": "0.37550769602147477"
-		},
-		{
-			"name": "Eastern Bank",
-			"address": "155 Dartmouth Street",
-			"city": "Boston",
-			"state": "MA",
-			"zip": "02116",
-			"phone": "617-927-2200",
-			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:16:30,6:08:30:18:00,7:09:00:13:00",
-			"lat": "42.347698",
-			"lng": "-71.076202",
-			"distance": "1.2434038975969084"
+			"lng": "-71.053986"
 		},
 		{
 			"name": "Eastern Bank",
@@ -207,8 +200,7 @@ $(function() {
 			"phone": "617-498-2500",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:16:30,6:08:30:16:30",
 			"lat": "42.362850",
-			"lng": "-71.085899",
-			"distance": "1.3799559767264165"
+			"lng": "-71.085899"
 		},
 		{
 			"name": "Eastern Bank",
@@ -219,8 +211,7 @@ $(function() {
 			"phone": "617-263-2560",
 			"hours": "2:10:00:19:00,3:10:00:19:00,4:10:00:19:00,5:10:00:19:00,6:10:00:19:00,7:10:00:18:00,1:11:00:15:00",
 			"lat": "42.376369",
-			"lng": "-71.039848",
-			"distance": "1.4722681389149515"
+			"lng": "-71.039848"
 		},
 		{
 			"name": "Eastern Bank",
@@ -231,8 +222,7 @@ $(function() {
 			"phone": "617-464-2700",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:18:00,7:08:30:13:00",
 			"lat": "42.336136",
-			"lng": "-71.046288",
-			"distance": "1.8042110527679602"
+			"lng": "-71.046288"
 		},
 		{
 			"name": "Eastern Bank",
@@ -243,8 +233,7 @@ $(function() {
 			"phone": "617-354-2445",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.365601",
-			"lng": "-71.103996",
-			"distance": "2.32124486181478"
+			"lng": "-71.103996"
 		},
 		{
 			"name": "Eastern Bank",
@@ -255,8 +244,7 @@ $(function() {
 			"phone": "617-235-8135",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00,7:08:30:12:00",
 			"lat": "42.394699",
-			"lng": "-71.039398",
-			"distance": "2.568671424676159"
+			"lng": "-71.039398"
 		},
 		{
 			"name": "Eastern Bank",
@@ -267,8 +255,7 @@ $(function() {
 			"phone": "617-354-3616",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.373390",
-			"lng": "-71.120865",
-			"distance": "3.2788410292997963"
+			"lng": "-71.120865"
 		},
 		{
 			"name": "Eastern Bank",
@@ -279,8 +266,7 @@ $(function() {
 			"phone": "617-739-2010",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:18:00,6:08:30:18:00,7:09:00:13:00",
 			"lat": "42.343063",
-			"lng": "-71.122688",
-			"distance": "3.4647589815423334"
+			"lng": "-71.122688"
 		},
 		{
 			"name": "Eastern Bank",
@@ -291,8 +277,7 @@ $(function() {
 			"phone": "781-395-4899",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:19:00,6:09:00:19:00,7:09:00:13:00",
 			"lat": "42.408134",
-			"lng": "-71.093292",
-			"distance": "3.727547407566711"
+			"lng": "-71.093292"
 		},
 		{
 			"name": "Eastern Bank",
@@ -303,8 +288,7 @@ $(function() {
 			"phone": "617-387-5115",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:18:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.415627",
-			"lng": "-71.048058",
-			"distance": "3.8516457810367677"
+			"lng": "-71.048058"
 		},
 		{
 			"name": "Eastern Bank",
@@ -315,8 +299,7 @@ $(function() {
 			"phone": "617-628-9700",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.395451",
-			"lng": "-71.124367",
-			"distance": "4.117050471253167"
+			"lng": "-71.124367"
 		},
 		{
 			"name": "Eastern Bank",
@@ -327,8 +310,7 @@ $(function() {
 			"phone": "617-971-9550",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.312126",
-			"lng": "-71.114433",
-			"distance": "4.377435010947063"
+			"lng": "-71.114433"
 		},
 		{
 			"name": "Eastern Bank",
@@ -339,8 +321,7 @@ $(function() {
 			"phone": "781-388-1210",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.426800",
-			"lng": "-71.069633",
-			"distance": "4.614164839281387"
+			"lng": "-71.069633"
 		},
 		{
 			"name": "Eastern Bank",
@@ -351,8 +332,7 @@ $(function() {
 			"phone": "617-234-2255",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.394669",
-			"lng": "-71.140602",
-			"distance": "4.785771749890594"
+			"lng": "-71.140602"
 		},
 		{
 			"name": "Eastern Bank",
@@ -363,8 +343,7 @@ $(function() {
 			"phone": "617-929-1906",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.286247",
-			"lng": "-71.064156",
-			"distance": "5.135912764147221"
+			"lng": "-71.064156"
 		},
 		{
 			"name": "Eastern Bank",
@@ -375,8 +354,7 @@ $(function() {
 			"phone": "617-926-7588",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.366402",
-			"lng": "-71.185997",
-			"distance": "6.4935746190758445"
+			"lng": "-71.185997"
 		},
 		{
 			"name": "Eastern Bank",
@@ -387,8 +365,7 @@ $(function() {
 			"phone": "781-665-2264",
 			"hours": "2:08:00:18:00,3:08:00:18:00,4:08:00:18:00,5:08:00:19:00,6:08:00:19:00,7:09:00:15:00,1:11:00:15:00",
 			"lat": "42.454800",
-			"lng": "-71.065498",
-			"distance": "6.525512915026517"
+			"lng": "-71.065498"
 		},
 		{
 			"name": "Eastern Bank",
@@ -399,8 +376,7 @@ $(function() {
 			"phone": "781-231-4880",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:16:00,6:09:00:17:00,7:09:00:12:00",
 			"lat": "42.448624",
-			"lng": "-71.009102",
-			"distance": "6.602421568616116"
+			"lng": "-71.009102"
 		},
 		{
 			"name": "Eastern Bank",
@@ -411,8 +387,7 @@ $(function() {
 			"phone": "617-689-1712",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:19:00,6:08:30:17:00,7:08:30:13:00",
 			"lat": "42.266048",
-			"lng": "-71.016655",
-			"distance": "6.875386970488417"
+			"lng": "-71.016655"
 		},
 		{
 			"name": "Eastern Bank",
@@ -423,8 +398,7 @@ $(function() {
 			"phone": "617-969-6330",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:00,6:08:30:17:00,7:09:00:13:00",
 			"lat": "42.330276",
-			"lng": "-71.195000",
-			"distance": "7.249214363449615"
+			"lng": "-71.195000"
 		},
 		{
 			"name": "Eastern Bank",
@@ -435,8 +409,7 @@ $(function() {
 			"phone": "617-897-1068",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:18:00,7:09:00:14:00",
 			"lat": "42.280815",
-			"lng": "-71.158401",
-			"distance": "7.487274089059296"
+			"lng": "-71.158401"
 		},
 		{
 			"name": "Eastern Bank",
@@ -447,8 +420,7 @@ $(function() {
 			"phone": "781-231-4890",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:16:00,6:09:00:19:00,7:09:00:12:00",
 			"lat": "42.464802",
-			"lng": "-71.010803",
-			"distance": "7.617203889548229"
+			"lng": "-71.010803"
 		},
 		{
 			"name": "Eastern Bank",
@@ -459,8 +431,7 @@ $(function() {
 			"phone": "781-231-4801",
 			"hours": "2:07:00:20:00,3:07:00:20:00,4:07:00:20:00,5:07:00:20:00,6:07:00:20:00,7:09:00:17:00,1:11:00:15:00",
 			"lat": "42.479645",
-			"lng": "-71.021584",
-			"distance": "8.453007591127536"
+			"lng": "-71.021584"
 		},
 		{
 			"name": "Eastern Bank",
@@ -471,8 +442,7 @@ $(function() {
 			"phone": "617-243-8200",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:17:00,7:09:00:12:00",
 			"lat": "42.311798",
-			"lng": "-71.213402",
-			"distance": "8.570932758838998"
+			"lng": "-71.213402"
 		},
 		{
 			"name": "Eastern Bank",
@@ -483,8 +453,7 @@ $(function() {
 			"phone": "617-689-1746",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:19:00,6:08:30:18:00,7:08:30:13:00",
 			"lat": "42.241810",
-			"lng": "-71.003693",
-			"distance": "8.674363181756194"
+			"lng": "-71.003693"
 		},
 		{
 			"name": "Eastern Bank",
@@ -495,8 +464,7 @@ $(function() {
 			"phone": "781-598-8607",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:16:00,6:08:30:16:00,7:09:00:12:00",
 			"lat": "42.462940",
-			"lng": "-70.948463",
-			"distance": "9.053085772527778"
+			"lng": "-70.948463"
 		},
 		{
 			"name": "Eastern Bank",
@@ -507,8 +475,7 @@ $(function() {
 			"phone": "781-438-3535",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:18:00,6:08:30:18:00,7:09:00:15:00",
 			"lat": "42.490463",
-			"lng": "-71.100220",
-			"distance": "9.223574906568977"
+			"lng": "-71.100220"
 		},
 		{
 			"name": "Eastern Bank",
@@ -519,8 +486,7 @@ $(function() {
 			"phone": "781-598-2520",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:19:00,6:09:00:18:00,7:09:00:15:00,1:11:00:15:00",
 			"lat": "42.472858",
-			"lng": "-70.959846",
-			"distance": "9.268865952334815"
+			"lng": "-70.959846"
 		},
 		{
 			"name": "Eastern Bank",
@@ -531,8 +497,7 @@ $(function() {
 			"phone": "617-689-1754",
 			"hours": "2:09:00:17:00,3:09:00:17:00,4:09:00:17:00,5:09:00:17:00,6:09:00:19:00,7:09:00:13:00,1:11:00:15:00",
 			"lat": "42.249508",
-			"lng": "-71.171143",
-			"distance": "9.570907974967563"
+			"lng": "-71.171143"
 		},
 		{
 			"name": "Eastern Bank",
@@ -543,8 +508,7 @@ $(function() {
 			"phone": "617-558-2300",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:18:00,7:09:00:13:00",
 			"lat": "42.347393",
-			"lng": "-71.245880",
-			"distance": "9.582222401759326"
+			"lng": "-71.245880"
 		},
 		{
 			"name": "Eastern Bank",
@@ -555,8 +519,7 @@ $(function() {
 			"phone": "781-246-2727",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:18:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.502102",
-			"lng": "-71.072067",
-			"distance": "9.80816809299377"
+			"lng": "-71.072067"
 		},
 		{
 			"name": "Eastern Bank",
@@ -567,8 +530,7 @@ $(function() {
 			"phone": "781-246-1100",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:19:00,6:08:00:19:00,7:09:00:14:00",
 			"lat": "42.511799",
-			"lng": "-71.036613",
-			"distance": "10.518239946012482"
+			"lng": "-71.036613"
 		},
 		{
 			"name": "Eastern Bank",
@@ -579,8 +541,7 @@ $(function() {
 			"phone": "781-238-4714",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:18:00,7:09:00:12:00",
 			"lat": "42.448532",
-			"lng": "-71.229370",
-			"distance": "10.607682356953106"
+			"lng": "-71.229370"
 		},
 		{
 			"name": "Eastern Bank",
@@ -591,8 +552,7 @@ $(function() {
 			"phone": "781-848-5560",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:19:00,7:08:30:13:00",
 			"lat": "42.220982",
-			"lng": "-70.969933",
-			"distance": "10.661423839460914"
+			"lng": "-70.969933"
 		},
 		{
 			"name": "Eastern Bank",
@@ -603,8 +563,7 @@ $(function() {
 			"phone": "781-238-4700",
 			"hours": "2:09:00:17:00,3:09:00:17:00,4:09:00:17:00,5:09:00:18:00,6:09:00:18:00,7:09:00:13:00",
 			"lat": "42.472198",
-			"lng": "-71.211700",
-			"distance": "10.964400430412795"
+			"lng": "-71.211700"
 		},
 		{
 			"name": "Eastern Bank",
@@ -615,8 +574,7 @@ $(function() {
 			"phone": "781-599-8100",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:19:00,6:08:00:19:00,7:09:00:13:00,1:11:00:15:00",
 			"lat": "42.478100",
-			"lng": "-70.907837",
-			"distance": "11.205235575681694"
+			"lng": "-70.907837"
 		},
 		{
 			"name": "Eastern Bank",
@@ -627,8 +585,7 @@ $(function() {
 			"phone": "781-942-8187",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:18:00,7:09:00:13:00",
 			"lat": "42.522907",
-			"lng": "-71.104736",
-			"distance": "11.462417344303848"
+			"lng": "-71.104736"
 		},
 		{
 			"name": "Eastern Bank",
@@ -639,8 +596,7 @@ $(function() {
 			"phone": "(978) 531-8311",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:18:00,6:08:00:18:00,7:09:00:13:00",
 			"lat": "42.512184",
-			"lng": "-70.947166",
-			"distance": "11.934876967222882"
+			"lng": "-70.947166"
 		},
 		{
 			"name": "Eastern Bank",
@@ -651,8 +607,7 @@ $(function() {
 			"phone": "(978) 740-6144",
 			"hours": "2:09:00:17:00,3:09:00:17:00,4:09:00:17:00,5:09:00:20:00,6:09:00:20:00,7:09:00:15:00,1:11:00:15:00",
 			"lat": "42.502731",
-			"lng": "-70.923981",
-			"distance": "12.003059567826071"
+			"lng": "-70.923981"
 		},
 		{
 			"name": "Eastern Bank",
@@ -663,8 +618,7 @@ $(function() {
 			"phone": "781-740-4830",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:18:00,7:08:30:12:00",
 			"lat": "42.233917",
-			"lng": "-70.880333",
-			"distance": "12.645976496500667"
+			"lng": "-70.880333"
 		},
 		{
 			"name": "Eastern Bank",
@@ -675,8 +629,7 @@ $(function() {
 			"phone": "(978) 740-6372",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:18:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.501240",
-			"lng": "-70.895744",
-			"distance": "12.805262757382605"
+			"lng": "-70.895744"
 		},
 		{
 			"name": "Eastern Bank",
@@ -687,8 +640,7 @@ $(function() {
 			"phone": "781-331-0893",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:19:00,6:08:30:17:00,7:08:30:13:00",
 			"lat": "42.197208",
-			"lng": "-70.929291",
-			"distance": "13.08785741345429"
+			"lng": "-70.929291"
 		},
 		{
 			"name": "Eastern Bank",
@@ -699,8 +651,7 @@ $(function() {
 			"phone": "(978) 977-0555",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:18:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.524700",
-			"lng": "-70.928200",
-			"distance": "13.163779357349437"
+			"lng": "-70.928200"
 		},
 		{
 			"name": "Eastern Bank",
@@ -711,8 +662,7 @@ $(function() {
 			"phone": "(978) 531-4505",
 			"hours": "2:10:00:20:00,3:10:00:20:00,4:10:00:20:00,5:10:00:20:00,6:10:00:20:00,7:10:00:18:00,1:11:00:15:00",
 			"lat": "42.528492",
-			"lng": "-70.929863",
-			"distance": "13.348128125563047"
+			"lng": "-70.929863"
 		},
 		{
 			"name": "Eastern Bank",
@@ -723,8 +673,7 @@ $(function() {
 			"phone": "781-961-1951",
 			"hours": "2:08:30:16:30,3:08:30:16:30,4:08:30:16:30,5:08:30:17:30,6:08:30:17:30,7:09:00:12:00",
 			"lat": "42.163261",
-			"lng": "-71.043526",
-			"distance": "13.650483201629873"
+			"lng": "-71.043526"
 		},
 		{
 			"name": "Eastern Bank",
@@ -735,8 +684,7 @@ $(function() {
 			"phone": "(978) 740-6235",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:16:00,6:08:30:16:00",
 			"lat": "42.520824",
-			"lng": "-70.895607",
-			"distance": "13.864518803588572"
+			"lng": "-70.895607"
 		},
 		{
 			"name": "Eastern Bank",
@@ -747,8 +695,7 @@ $(function() {
 			"phone": "(978) 745-0183",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:19:00,6:09:00:18:00,7:09:00:15:00",
 			"lat": "42.519798",
-			"lng": "-70.889671",
-			"distance": "13.992752894551698"
+			"lng": "-70.889671"
 		},
 		{
 			"name": "Eastern Bank",
@@ -759,8 +706,7 @@ $(function() {
 			"phone": "(978) 658-4000",
 			"hours": "2:09:00:17:00,3:09:00:17:00,4:09:00:17:00,5:09:00:19:00,6:09:00:17:00,7:09:00:13:00",
 			"lat": "42.548824",
-			"lng": "-71.176857",
-			"distance": "14.332856163944003"
+			"lng": "-71.176857"
 		},
 		{
 			"name": "Eastern Bank",
@@ -771,8 +717,7 @@ $(function() {
 			"phone": "(978) 777-1600",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:19:00,6:08:30:19:00,7:09:00:15:00,1:11:00:15:00",
 			"lat": "42.550701",
-			"lng": "-70.946831",
-			"distance": "14.33514038702164"
+			"lng": "-70.946831"
 		},
 		{
 			"name": "Eastern Bank",
@@ -783,8 +728,7 @@ $(function() {
 			"phone": "781-639-4320",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:17:00,6:09:00:17:00,7:09:00:12:00",
 			"lat": "42.504452",
-			"lng": "-70.850174",
-			"distance": "14.575769624717015"
+			"lng": "-70.850174"
 		},
 		{
 			"name": "Eastern Bank",
@@ -795,8 +739,7 @@ $(function() {
 			"phone": "(978) 927-1803",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:18:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.550598",
-			"lng": "-70.895798",
-			"distance": "15.551508061526452"
+			"lng": "-70.895798"
 		},
 		{
 			"name": "Eastern Bank",
@@ -807,8 +750,7 @@ $(function() {
 			"phone": "(508) 655-4101",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:17:00,7:09:00:12:00",
 			"lat": "42.285400",
-			"lng": "-71.347603",
-			"distance": "15.627215832751908"
+			"lng": "-71.347603"
 		},
 		{
 			"name": "Eastern Bank",
@@ -819,8 +761,7 @@ $(function() {
 			"phone": "781-297-3550",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:17:00,7:08:30:13:00",
 			"lat": "42.135300",
-			"lng": "-71.101700",
-			"distance": "15.711524337504931"
+			"lng": "-71.101700"
 		},
 		{
 			"name": "Eastern Bank",
@@ -831,8 +772,7 @@ $(function() {
 			"phone": "781-871-8650",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:18:00,7:09:00:12:00",
 			"lat": "42.172787",
-			"lng": "-70.880424",
-			"distance": "15.863066449273022"
+			"lng": "-70.880424"
 		},
 		{
 			"name": "Eastern Bank",
@@ -843,8 +783,7 @@ $(function() {
 			"phone": "781-828-4448",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:18:00,6:08:30:17:00,7:09:00:12:00",
 			"lat": "42.139362",
-			"lng": "-71.148643",
-			"distance": "15.950928419797327"
+			"lng": "-71.148643"
 		},
 		{
 			"name": "Eastern Bank",
@@ -855,8 +794,7 @@ $(function() {
 			"phone": "781-784-7800",
 			"hours": "2:08:30:15:00,3:08:30:15:00,4:08:30:15:00,5:08:30:18:00,6:08:30:15:00,7:08:30:12:30",
 			"lat": "42.123550",
-			"lng": "-71.179306",
-			"distance": "17.488631241770825"
+			"lng": "-71.179306"
 		},
 		{
 			"name": "Eastern Bank",
@@ -867,8 +805,7 @@ $(function() {
 			"phone": "(978) 851-0300",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:19:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.593014",
-			"lng": "-71.209061",
-			"distance": "17.79328046377175"
+			"lng": "-71.209061"
 		},
 		{
 			"name": "Eastern Bank",
@@ -879,8 +816,7 @@ $(function() {
 			"phone": "(978) 927-5890",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:18:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.586784",
-			"lng": "-70.885117",
-			"distance": "17.97526640816908"
+			"lng": "-70.885117"
 		},
 		{
 			"name": "Eastern Bank",
@@ -891,8 +827,7 @@ $(function() {
 			"phone": "(508) 586-6800",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:17:00,6:09:00:18:00,7:08:30:12:00",
 			"lat": "42.085663",
-			"lng": "-70.987213",
-			"distance": "19.341835693072635"
+			"lng": "-70.987213"
 		},
 		{
 			"name": "Eastern Bank",
@@ -903,8 +838,7 @@ $(function() {
 			"phone": "(978) 296-9044",
 			"hours": "2:09:00:17:00,3:09:00:17:00,4:09:00:17:00,5:09:00:18:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.655392",
-			"lng": "-71.139771",
-			"distance": "20.78822626237775"
+			"lng": "-71.139771"
 		},
 		{
 			"name": "Eastern Bank",
@@ -915,8 +849,7 @@ $(function() {
 			"phone": "(508) 587-3210",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:17:00,6:09:00:18:00,7:08:30:12:00",
 			"lat": "42.059021",
-			"lng": "-71.067528",
-			"distance": "20.83460824480369"
+			"lng": "-71.067528"
 		},
 		{
 			"name": "Eastern Bank",
@@ -927,8 +860,7 @@ $(function() {
 			"phone": "(978) 256-3733",
 			"hours": "",
 			"lat": "42.598309",
-			"lng": "-71.352684",
-			"distance": "22.22502843618672"
+			"lng": "-71.352684"
 		},
 		{
 			"name": "Eastern Bank",
@@ -939,8 +871,7 @@ $(function() {
 			"phone": "(978) 256-3751",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:19:00,6:08:00:18:00,7:09:00:13:00",
 			"lat": "42.612598",
-			"lng": "-71.330803",
-			"distance": "22.253283292326014"
+			"lng": "-71.330803"
 		},
 		{
 			"name": "Eastern Bank",
@@ -951,8 +882,7 @@ $(function() {
 			"phone": "(978) 446-9276",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:19:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.644669",
-			"lng": "-71.308197",
-			"distance": "23.381015019452455"
+			"lng": "-71.308197"
 		},
 		{
 			"name": "Eastern Bank",
@@ -963,8 +893,7 @@ $(function() {
 			"phone": "(978) 692-3467",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:19:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.563354",
-			"lng": "-71.429428",
-			"distance": "23.514649546293622"
+			"lng": "-71.429428"
 		},
 		{
 			"name": "Eastern Bank",
@@ -975,8 +904,7 @@ $(function() {
 			"phone": "(978) 446-9214",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:17:00,6:09:00:17:00,7:09:00:12:00",
 			"lat": "42.657223",
-			"lng": "-71.312866",
-			"distance": "24.23949193870181"
+			"lng": "-71.312866"
 		},
 		{
 			"name": "Eastern Bank",
@@ -987,8 +915,7 @@ $(function() {
 			"phone": "(978) 722-0096",
 			"hours": "2:09:00:17:00,3:09:00:17:00,4:09:00:17:00,5:09:00:18:00,6:09:00:18:00,7:09:00:13:00",
 			"lat": "42.705811",
-			"lng": "-71.165443",
-			"distance": "24.46855522388476"
+			"lng": "-71.165443"
 		},
 		{
 			"name": "Eastern Bank",
@@ -999,8 +926,7 @@ $(function() {
 			"phone": "(978) 446-5200",
 			"hours": "2:10:00:18:00,3:10:00:18:00,4:10:00:18:00,5:10:00:18:00,6:10:00:16:00",
 			"lat": "42.706795",
-			"lng": "-71.165054",
-			"distance": "24.530502304255755"
+			"lng": "-71.165054"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1011,8 +937,7 @@ $(function() {
 			"phone": "(978) 441-0040",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:19:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "42.671322",
-			"lng": "-71.295692",
-			"distance": "24.62858923550235"
+			"lng": "-71.295692"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1023,8 +948,7 @@ $(function() {
 			"phone": "(508) 697-8800",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:16:00,6:09:00:18:00,7:09:00:12:00",
 			"lat": "41.992432",
-			"lng": "-70.978195",
-			"distance": "25.7661918951595"
+			"lng": "-70.978195"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1035,8 +959,7 @@ $(function() {
 			"phone": "781-837-0491",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:18:00,6:08:30:18:00,7:08:30:13:00",
 			"lat": "42.092087",
-			"lng": "-70.706848",
-			"distance": "25.859314237545988"
+			"lng": "-70.706848"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1047,8 +970,7 @@ $(function() {
 			"phone": "781-934-0101",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:18:00,7:08:30:13:00",
 			"lat": "42.025787",
-			"lng": "-70.683968",
-			"distance": "30.059277903172944"
+			"lng": "-70.683968"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1059,8 +981,7 @@ $(function() {
 			"phone": "781-585-6150",
 			"hours": "2:09:00:16:00,3:09:00:16:00,4:09:00:16:00,5:09:00:18:00,6:09:00:18:00,7:08:30:12:00",
 			"lat": "41.987362",
-			"lng": "-70.712830",
-			"distance": "31.289704799184015"
+			"lng": "-70.712830"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1071,8 +992,7 @@ $(function() {
 			"phone": "(508) 946-3065",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:17:00,6:08:00:17:00,7:08:30:12:00",
 			"lat": "41.911514",
-			"lng": "-70.960770",
-			"distance": "31.428629970904474"
+			"lng": "-70.960770"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1083,8 +1003,7 @@ $(function() {
 			"phone": "(978) 462-6641",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:18:00,6:08:30:18:00,7:09:00:12:00",
 			"lat": "42.821301",
-			"lng": "-70.906700",
-			"distance": "32.771286575397816"
+			"lng": "-70.906700"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1095,8 +1014,7 @@ $(function() {
 			"phone": "(508) 884-3447",
 			"hours": "2:09:00:15:00,3:09:00:15:00,4:09:00:15:00,5:09:00:16:00,6:09:00:17:00,7:08:30:12:00",
 			"lat": "41.882889",
-			"lng": "-71.065659",
-			"distance": "33.0021443155134"
+			"lng": "-71.065659"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1107,8 +1025,7 @@ $(function() {
 			"phone": "(508) 747-6060",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:18:00,7:09:00:13:00,1:10:00:15:00",
 			"lat": "41.944199",
-			"lng": "-70.705864",
-			"distance": "33.98124485485701"
+			"lng": "-70.705864"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1119,8 +1036,7 @@ $(function() {
 			"phone": "(508) 946-3923",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:17:00,6:08:00:18:00,7:08:30:13:00",
 			"lat": "41.874538",
-			"lng": "-70.926773",
-			"distance": "34.255150584262715"
+			"lng": "-70.926773"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1131,8 +1047,7 @@ $(function() {
 			"phone": "(508) 746-3301",
 			"hours": "2:08:00:16:00,3:08:00:16:00,4:08:00:16:00,5:08:00:17:00,6:08:00:17:00,7:08:30:12:00",
 			"lat": "41.956299",
-			"lng": "-70.664497",
-			"distance": "34.47342330160974"
+			"lng": "-70.664497"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1143,8 +1058,7 @@ $(function() {
 			"phone": "(603) 546-0012",
 			"hours": "2:09:00:17:30,3:09:00:17:30,4:09:00:17:30,5:09:00:17:30,6:09:00:17:30",
 			"lat": "42.786701",
-			"lng": "-71.507195",
-			"distance": "37.246607136554914"
+			"lng": "-71.507195"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1155,8 +1069,7 @@ $(function() {
 			"phone": "(508) 295-3800",
 			"hours": "2:08:00:15:00,3:08:00:15:00,4:08:00:15:00,5:08:00:17:00,6:08:00:18:00,7:08:30:12:00",
 			"lat": "41.759220",
-			"lng": "-70.716942",
-			"distance": "45.10069475373059"
+			"lng": "-70.716942"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1167,8 +1080,7 @@ $(function() {
 			"phone": "(508) 291-0908",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:18:00,7:08:30:12:00",
 			"lat": "41.759842",
-			"lng": "-70.666702",
-			"distance": "46.12603446673089"
+			"lng": "-70.666702"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1179,8 +1091,7 @@ $(function() {
 			"phone": "(603) 647-4446",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:18:00,6:08:00:17:00",
 			"lat": "42.960552",
-			"lng": "-71.483505",
-			"distance": "46.73708012108964"
+			"lng": "-71.483505"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1191,8 +1102,7 @@ $(function() {
 			"phone": "(508) 748-2919",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:17:00,6:08:00:18:00,7:08:30:12:00",
 			"lat": "41.714756",
-			"lng": "-70.769379",
-			"distance": "47.02939072266106"
+			"lng": "-70.769379"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1203,8 +1113,7 @@ $(function() {
 			"phone": "(603) 647-4446",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:17:00,6:08:00:17:00",
 			"lat": "43.007740",
-			"lng": "-71.456871",
-			"distance": "49.07666844418056"
+			"lng": "-71.456871"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1215,8 +1124,7 @@ $(function() {
 			"phone": "(508) 758-4936",
 			"hours": "2:08:00:15:00,3:08:00:15:00,4:08:00:15:00,5:08:00:16:00,6:08:00:18:00,7:08:30:12:00",
 			"lat": "41.663300",
-			"lng": "-70.814697",
-			"distance": "49.780251278170184"
+			"lng": "-70.814697"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1227,8 +1135,7 @@ $(function() {
 			"phone": "(508) 888-4444",
 			"hours": "2:08:00:16:00,3:08:00:16:00,4:08:00:16:00,5:08:00:17:00,6:08:00:18:00,7:08:30:12:00",
 			"lat": "41.765808",
-			"lng": "-70.508911",
-			"distance": "49.84849558078986"
+			"lng": "-70.508911"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1239,8 +1146,7 @@ $(function() {
 			"phone": "(603) 433-4747",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00",
 			"lat": "43.078041",
-			"lng": "-70.762047",
-			"distance": "51.82357673803435"
+			"lng": "-70.762047"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1251,8 +1157,7 @@ $(function() {
 			"phone": "(508) 833-5111",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:18:00,7:08:30:12:00",
 			"lat": "41.711338",
-			"lng": "-70.491066",
-			"distance": "53.49370139597768"
+			"lng": "-70.491066"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1263,8 +1168,7 @@ $(function() {
 			"phone": "(603) 742-9494",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00",
 			"lat": "43.199921",
-			"lng": "-70.875549",
-			"distance": "58.745183447708676"
+			"lng": "-70.875549"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1275,8 +1179,7 @@ $(function() {
 			"phone": "(508) 428-1300",
 			"hours": "2:08:00:16:00,3:08:00:16:00,4:08:00:16:00,5:08:00:17:00,6:08:00:18:00,7:09:00:13:00",
 			"lat": "41.648643",
-			"lng": "-70.420753",
-			"distance": "59.10497105314338"
+			"lng": "-70.420753"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1287,8 +1190,7 @@ $(function() {
 			"phone": "(508) 477-7984",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00,7:09:00:14:00,1:11:00:14:00",
 			"lat": "41.611107",
-			"lng": "-70.491226",
-			"distance": "59.42799973530042"
+			"lng": "-70.491226"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1299,8 +1201,7 @@ $(function() {
 			"phone": "(508) 540-5002",
 			"hours": "2:08:30:16:00,3:08:30:16:00,4:08:30:16:00,5:08:30:17:00,6:08:30:18:00,7:08:30:12:00",
 			"lat": "41.568214",
-			"lng": "-70.595039",
-			"distance": "59.70941412314807"
+			"lng": "-70.595039"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1311,8 +1212,7 @@ $(function() {
 			"phone": "(508) 548-3000",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00,7:08:30:12:00",
 			"lat": "41.553654",
-			"lng": "-70.619553",
-			"distance": "60.150107978128155"
+			"lng": "-70.619553"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1323,8 +1223,7 @@ $(function() {
 			"phone": "(508) 771-4906",
 			"hours": "2:08:00:17:00,3:08:00:17:00,4:08:00:17:00,5:08:00:17:00,6:08:00:18:00,7:08:30:13:00",
 			"lat": "41.663219",
-			"lng": "-70.283051",
-			"distance": "62.51719294162776"
+			"lng": "-70.283051"
 		},
 		{
 			"name": "Eastern Bank",
@@ -1335,10 +1234,10 @@ $(function() {
 			"phone": "(603) 224-1717",
 			"hours": "2:08:30:17:00,3:08:30:17:00,4:08:30:17:00,5:08:30:17:00,6:08:30:17:00",
 			"lat": "43.203934",
-			"lng": "-71.535400",
-			"distance": "63.08834730512873"
+			"lng": "-71.535400"
 		}
 	];
+
 
 	function initializeMap() {
 		var geocoder = new google.maps.Geocoder(),
@@ -1358,60 +1257,76 @@ $(function() {
 			}
 		});
 
-		// infoWindow = new google.maps.InfoWindow();
 		service = new google.maps.places.PlacesService(map);
-		branchSearch();
+		branchSearch("load");
 	}
 
 	function branchSearch(type, lat, lng) {
 		var geocoder = new google.maps.Geocoder(),
+			radius = 5,
 			zipCode = $(".search-zip")[0].value;
 
-		$(".search-results ol").empty().show();
+			console.log("branchSearch", type);
 
-		for (var i = 0; i < branches.length; i++ ) {
-			branches[i].setMap(null);
-		}
+		if(type === "load") {
 
-		branches.length = 0;
+console.log("aa");
 
+			clearBranches();
 
-		if(type === "geo") {
-			console.log("1");
-	    var latlng = new google.maps.LatLng(lat, lng);
-
+			radius = 1000;
+			// Boston.
+			zipCode = "02203";
+			geocoder.geocode({address: zipCode}, function(results, status) {
+				if(status == google.maps.GeocoderStatus.OK) {
+					branchSearchNear(results[0].geometry.location, type, radius);
+				}
+			});
+		} else if(type === "geo") {
+			var latlng = new google.maps.LatLng(lat, lng);
+			radius = 5;
 			geocoder.geocode({location: latlng}, function(results, status) {
 				if(status == google.maps.GeocoderStatus.OK) {
-					if (results[1]) {
-						zipCode = results[1]["address_components"][7]["short_name"];
-						geocoder.geocode({address: zipCode}, function(results, status) {
+					if(results[1]) {
+						var cityCircle = new google.maps.Circle({
+							strokeColor: "#fff",
+							strokeOpacity: 0.7,
+							strokeWeight: 1,
+							fillColor: "#fff",
+							fillOpacity: 0.5,
+							map: map,
+							center: results[0].geometry.location,
+							radius: Math.sqrt(8046.72) * 100
+						});
+						geocoder.geocode({address: results[1]["formatted_address"]}, function(results, status) {
 							if(status == google.maps.GeocoderStatus.OK) {
-								radius = 5;
-								branchSearchNear(results[0].geometry.location, type);
+								branchSearchNear(results[0].geometry.location, type, radius);
 							}
 						});
 					}
 				}
 			});
-		}else {
-			console.log("2");
-			if(type === "search") {
-				radius = 5;
-			} else {
-				radius = 1000;
-				zipCode = "02203";
-			}
+		} else if(type === "search") {
+			radius = 5;
 			geocoder.geocode({address: zipCode}, function(results, status) {
 				if(status == google.maps.GeocoderStatus.OK) {
-					branchSearchNear(results[0].geometry.location, type);
+					var cityCircle = new google.maps.Circle({
+						strokeColor: "#1875bc",
+						strokeOpacity: 0.7,
+						strokeWeight: 1,
+						fillColor: "#1875bc",
+						fillOpacity: 0.5,
+						map: map,
+						center: results[0].geometry.location,
+						radius: Math.sqrt(8046.72) * 100
+					});
+					branchSearchNear(results[0].geometry.location, type, radius);
 				}
 			});
 		}
 	}
 
-	locationFilteredResults = [];
-
-	function branchSearchNear(center, type) {
+	function branchSearchNear(center, type, radius) {
 		var address,
 			amPm,
 			bounds = new google.maps.LatLngBounds(),
@@ -1426,10 +1341,12 @@ $(function() {
 			hoursOpen,
 			hoursOpenFull,
 			ii = 0,
+			k = 0,
 			lat,
 			lng,
 			location,
 			locationResults = [],
+			locationFilteredResults = [],
 			name,
 			numItems,
 			phone,
@@ -1437,26 +1354,13 @@ $(function() {
 			userLat = center.lat(),
 			userLng = center.lng();
 
-
-
-		clearBranches();
-
 		for(var i = 0; i < branchList.length; i++) {
 			lat = branchList[i].lat;
 			lng = branchList[i].lng;
-
 			distance = GeoCodeCalc.CalcDistance(userLat, userLng, lat, lng, 3956);
-
 			name = branchList[i].name;
 			address = branchList[i].address + " <br> " + branchList[i].city + " " + branchList[i].state + " " + branchList[i].zip;
-			phone = branchList[i].phone;
-
-
-
-			// TODO: make this consitent with sidebar see 			$(".search-results ol").append('<li class="search-result-item"><p>'
-
-
-
+			phone = '<span class="hidden"><a href="tel://1-' + branchList[i].phone + '">'	+ branchList[i].phone + '</a></span>';
 			daysHours = branchList[i].hours.split(",");
 			hours = "";
 			numItems = daysHours.length;
@@ -1491,13 +1395,13 @@ $(function() {
 				}
 
 				hoursOpenFull = daysHours[ii].substring(2, 7);
-		    amPm = (hoursOpenFull.substring(0, 2)).substring() > 11 ? 'PM' : 'AM';
+				amPm = (hoursOpenFull.substring(0, 2)).substring() > 11 ? 'PM' : 'AM';
 				hoursOpen = parseInt(hoursOpenFull);
 				hoursOpen = ((hoursOpen + 11) % 12 + 1).toString();
 				hoursOpen = hoursOpen + ":" + hoursOpenFull.substring(hoursOpenFull.length - 2) + " " + amPm;
 
 				hoursCloseFull = daysHours[ii].substring(daysHours[ii].length - 5);
-		    amPm = (hoursCloseFull.substring(0, 2)).substring() > 11 ? 'PM' : 'AM';
+				amPm = (hoursCloseFull.substring(0, 2)).substring() > 11 ? 'PM' : 'AM';
 				hoursClose = parseInt(hoursCloseFull);
 				hoursClose = ((hoursClose + 11) % 12 + 1).toString();
 				hoursClose = hoursClose + ":" + hoursCloseFull.substring(hoursCloseFull.length - 2) + " " + amPm;
@@ -1505,109 +1409,71 @@ $(function() {
 				hours += '<span class="branch-hours-day">' + dayPrefixed +  "</span> " + hoursOpen +  " - " + hoursClose + '<br>';
 			}
 
-			locationResults[i] = new Array (distance, name, lat, lng, address, phone, hours);
+			if(distance < radius) {
+				locationResults[k] = [distance, name, lat, lng, address, phone, hours];
+				k++;
+			}
 		}
 
+		console.log("locationResults3", locationResults.length);
 
-		if(locationResults[0][0] > radius) {
+		if(locationResults.length === 0) {
 			alert("Sorry, no branches in this area.");
-
-			console.warn("TODO");
-
-			// branchSearch();
-
+			branchSearch("load");
 			return false;
 		}
 
+		// TODO: handle sorting by distance
 
-
-		// // Sort the multi-dimensional array numerically.
+		// Sort the multi-dimensional array numerically.
 		// locationResults.sort(function(a, b) {
 		// 	var x = a[0];
 		// 	var y = b[0];
 		// });
 
-
+		// console.log("all locations ", locationResults.length);
 
 		for (var j = 0; j <= locationResults.length - 1; j++) {
+			// console.log("j locationResults", locationResults[j]);
 			location = new google.maps.LatLng(parseFloat(locationResults[j][2]), parseFloat(locationResults[j][3]));
-
 
 			// console.log("creating marker", j);
 
-
-			if(locationResults[j][0] <= 5.9999 && type === "search") {
+			if(type === "load") {
 				bounds.extend(location);
 				resultRangeCounter++;
 				createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
-				console.log("123");
 				locationFilteredResults.push(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
-
-			// $(".search-results ol").append('<li class="search-result-item"><p>'
-			//  + locationResults[j][1] + '<br>'
-			//  + locationResults[j][4] + '<br><span class="hidden"><a href="tel://1-' + locationResults[j][5] + '">'
-			//  + locationResults[j][5] + '</a><br><br>'
-			//  + locationResults[j][6] + '</span></p></li>');
-
-			// console.log("aa", locationResults[j][0]);
-
-			}
-			else if(locationResults[j][0] <= 5.9999 && type === "geo") {
+			} else if(locationResults[j][0] <= 5 && (type === "geo" || type === "search")) {
 				bounds.extend(location);
-				createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
+				resultRangeCounter++;
+				// createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
+				locationFilteredResults.push(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
 			}
-			else if(type !== "search") {
-				bounds.extend(location);
-				createMarker(location, locationResults[j][1], locationResults[j][4], locationResults[j][5], locationResults[j][6]);
-			}
-
-
 		}
-
-
-		console.log("locationR", locationFilteredResults.length);
 
 		map.fitBounds(bounds);
 
+		if((type === "search" || type === "geo") && resultRangeCounter > 10) {
+			map.setZoom(map.getZoom() + 1);
+		}
+		if((type === "search" || type === "geo") && resultRangeCounter == 1) {
+			map.setZoom(map.getZoom() - 5);
+		}
 		map.panBy(120, 0);
-
-		// if(type === "search" && resultRangeCounter > 10) {
-		// 	setTimeout(function() {
-		// 		// map.setZoom(map.getZoom() + 1);
-
-		// 	console.warn("noooo");
-		// 		map.panBy(120, 0);
-
-		// 		// map.fitBounds(bounds);
-
-		// 	}, 50);
-		// }
-		// if(type === "search" && resultRangeCounter == 1) {
-		// 	console.warn("hi");
-		// 	setTimeout(function() {
-		// 		// map.setZoom(map.getZoom() - 5);
-		// 		map.fitBounds(bounds);
-
-		// 	}, 50);
-		// }
-
-		// if(type === "geo") {
-
-		// }
-
-		// if(type == "geo") {
-		// 	console.log("conyo");
-		// }
-
-
 	}
 
-	function clearBranches() {
-		 for (var i = 0; i < branches.length; i++) {
-       branches[i].setMap(null);
-     }
-     branches.length = 0;
-	}
+
+
+/*
+FIXME
+what is branches array
+*/
+
+
+
+
+
 
 	function createMarker(location, name, address, phone, hours) {
 		var marker = new google.maps.Marker({
@@ -1618,13 +1484,34 @@ $(function() {
 			position: location
 		});
 
+
 		google.maps.event.addListener(marker, "click", function() {
+
+			// TODO: SCROLL to store
+
 			$(".search-results ol").hide();
 			$(".search-result-item-detail").show();
 			$(".search-result-item-detail").find("p:first-child").html(name + "<br>" + address + "<br>" + phone + "<br><br>" + hours);
 		});
 
 		branches.push(marker);
+	}
+
+
+
+
+
+
+
+
+
+	function clearBranches() {
+		for (var i = 0; i < branches.length; i++) {
+			branches[i].setMap(null);
+		}
+
+		branches.length = 0;
+		$(".search-results ol").empty().show();
 	}
 
 	GeoCodeCalc.ToRadian = function(v) {
@@ -1640,9 +1527,9 @@ $(function() {
 	};
 
 
-	// $(".locate-branch").click();
-	// $(".search-zip").val("02138");
-	// setTimeout(function(){
+	$(".locate-branch").click();
+	$(".search-zip").val("02138");
+	// setTimeout(function() {
 	// 	$(".icon-search").click();
 	// }, 250);
 });
