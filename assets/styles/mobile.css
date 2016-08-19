@@ -352,7 +352,27 @@
 }
 
 @media (min-width: 414px) and (max-width: 563px){
-		.free-checking-account-goodies{
+	.search-container {
+		background: #fff;
+		float: right;
+		height: 100%;
+		height: calc(100% - 100px);
+		margin-top: -89px;
+		margin-right: 2%;
+		position: relative;
+		width: 30%;
+		z-index: 3;
+	}
+
+	
+	#map {
+		height: 600px;
+		margin-top: -89px;
+		position: absolute;
+		width: 100%;
+	}
+
+	.free-checking-account-goodies{
 		padding-bottom:2px;
 		padding-top:40px;
 	}

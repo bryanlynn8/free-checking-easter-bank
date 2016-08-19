@@ -198,7 +198,6 @@ nav li div {
 nav li a:hover,
 nav li div:hover {
 	color: #1875bc;
-	color: transparent;
 }
 
 nav li:first-child:after {
@@ -209,13 +208,11 @@ nav li:first-child:after {
 }
 
 nav li div.active {
-	color: #1875bc;
-	position: relative;
 }
 
 nav li div.active:after {
 	color: #1875bc;
-	content: "â€¢";
+	content: ".";
 	font-size: 50px;
 	left: 0;
 	margin-top: 20px;
@@ -280,10 +277,10 @@ button {
 }
 
 #map {
-	height: 90%;
-	margin-top: 100px;
+	height: 600px;
 	position: absolute;
 	width: 100%;
+	margin-top: 11%;
 }
 
 .icon-target {
@@ -296,7 +293,7 @@ button {
 	padding: 5px;
 	margin-right: 10px;
 	position: absolute;
-	right: 40%;
+	right: 37%;
 	-webkit-transition: color .25s ease;
 	transition: color .25s ease;
 	z-index: 3;
@@ -321,9 +318,9 @@ button {
 	background: #fff;
 	float: right;
 	height: 100%;
-	height: calc(100% - 100px);
-	margin-top: 100px;
-	margin-right: 10%;
+	height: calc(99% - 100px);
+	margin-top: 11%;
+	margin-right: 0%;
 	position: relative;
 	width: 30%;
 	z-index: 3;
