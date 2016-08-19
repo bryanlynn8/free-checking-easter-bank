@@ -2,6 +2,8 @@
 
 
 @media (min-width: 769px) and (max-width: 1000px){
+
+
 	.free-checking-account-hero {
 	    background: url("../images/hero-background.jpg") no-repeat;
 	    background-position: -213px 90px;
@@ -18,6 +20,44 @@
 
 
 @media (max-width: 768px){
+	.icon-target {
+		background-color: #fff;
+		border-radius: 5px;
+		color: #1c3664;
+		cursor: pointer;
+		font-size: 24px;
+		padding: 5px;
+		margin-right: 10px;
+		position: absolute;
+		right: 37%;
+		-webkit-transition: color .25s ease;
+		transition: color .25s ease;
+		z-index: 3;
+		bottom:55%;
+		right:5%;
+	}
+
+	.search-container {
+		background: #fff;
+		float: right;
+		height: 100%;
+		height: calc(100% - 300px);
+		margin-top: -25%;
+		margin-right: 2%;
+		position: relative;
+		width: 30%;
+		z-index: 3;
+	}
+
+	
+	#map {
+		height: 600px;
+		margin-top: -25%;
+		position: absolute;
+		width: 100%;
+	}
+
+	
 	nav {
     float: right;
     margin-top: 25px;
@@ -352,6 +392,23 @@
 }
 
 @media (min-width: 414px) and (max-width: 563px){
+	.icon-target {
+		background-color: #fff;
+		border-radius: 5px;
+		color: #1c3664;
+		cursor: pointer;
+		font-size: 24px;
+		padding: 5px;
+		margin-right: 10px;
+		position: absolute;
+		right: 37%;
+		-webkit-transition: color .25s ease;
+		transition: color .25s ease;
+		z-index: 3;
+		bottom:20%;
+		right:5%;
+	}
+
 	.search-container {
 		background: #fff;
 		float: right;
@@ -470,6 +527,44 @@
 
 
 @media (min-width: 375px) and (max-width: 413px){
+
+	.icon-target {
+			background-color: #fff;
+			border-radius: 5px;
+			color: #1c3664;
+			cursor: pointer;
+			font-size: 24px;
+			padding: 5px;
+			margin-right: 10px;
+			position: absolute;
+			right: 37%;
+			-webkit-transition: color .25s ease;
+			transition: color .25s ease;
+			z-index: 3;
+			bottom: 27%;
+			right:5%;
+	}
+
+	.search-container {
+			background: #fff;
+			float: right;
+			height: 100%;
+			height: calc(100% - 100px);
+			margin-top: -124px;
+			margin-right: 2%;
+			position: relative;
+			width: 30%;
+			z-index: 3;
+	}
+
+
+	#map {
+			height: 600px;
+			margin-top: -124px;
+			position: absolute;
+			width: 100%;
+	}
+
 	.free-checking-account-options .column h3 {
 		margin-left: auto;
 		margin-top: -28px;
@@ -579,6 +674,42 @@
 }
 
 @media (min-width: 320px) and (max-width: 374px){
+	.icon-target {
+			background-color: #fff;
+			border-radius: 5px;
+			color: #1c3664;
+			cursor: pointer;
+			font-size: 24px;
+			padding: 5px;
+			margin-right: 10px;
+			position: absolute;
+			right: 37%;
+			-webkit-transition: color .25s ease;
+			transition: color .25s ease;
+			z-index: 3;
+			bottom:33%;
+			right:5%;
+	}
+
+	.search-container {
+			background: #fff;
+			float: right;
+			height: 100%;
+			height: calc(100% - 120px);
+			margin-top: -106px;
+			margin-right: 2%;
+			position: relative;
+			width: 30%;
+			z-index: 3;
+	}
+
+
+	#map {
+			height: 600px;
+			margin-top: -106px;
+			position: absolute;
+			width: 100%;
+	}
 
 	.get-started h1 {
 	    font-size: 1.7rem;
