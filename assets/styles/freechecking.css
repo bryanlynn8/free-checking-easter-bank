@@ -318,7 +318,7 @@ button {
 	background: #fff;
 	float: right;
 	height: 100%;
-	height: calc(99% - 100px);
+	height: calc(99% - 127px);
 	margin-top: 11%;
 	margin-right: 0%;
 	position: relative;
