@@ -6,6 +6,7 @@
 		<meta http-equiv="x-ua-compatible" content="IE=Edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="assets/styles/freechecking.css">
+		<link rel="stylesheet" href="assets/styles/mobile.css">
     <link rel="dns-prefetch" href="//express.easternbank.com/open-deposit/#">
     <link rel="prerender" href="//express.easternbank.com/open-deposit/#">
 	</head>
@@ -15,7 +16,7 @@
 				<a href="./" class="eastern-bank"><img id="FlexEBLogo" class="logo" src="assets/images/easternbank.png"></a>
 				<nav>
 					<ol>
-						<li><a href="tel://1-800-EASTERN" title="1-800-Eastern">1-800-EASTERN</a></li>
+						<li><a href="tel://1-800-EASTERN" title="1-800-Eastern" class="call">>1-800-EASTERN</a></li>
 						<li><div class="locate-branch" title="Locate a Branch">Locate a Branch</div></li>
 					</ol>
 				</nav>
@@ -49,7 +50,7 @@
 		</div>
 
 		<div class="free-checking-account-goodies" data-start="background-position: 0 0%" data-end="background-position: 0 80;">
-			<h2>The Eastern <span class="emphasize">Free Checking</span> Account</h2>
+			<h2>The Eastern <span class="spacer"></span> <span class="emphasize">Free Checking</span> Account</h2>
 			<div class="column-wrapper">
 				<div class="column">
 					<img src="assets/images/free-checking-account-goodies-icon-1.png" alt="">
@@ -67,7 +68,7 @@
 		</div>
 
 		<div class="free-checking-account-options">
-			<h2>We offer a variety of checking accounts. <br> See which one is <span class="emphasize">right for you.</span></h2>
+			<h2>We offer a variety of<span class="spacer"></span> checking accounts. <br> See which one is <span class="emphasize">right for you.</span></h2>
 			<p>You can receive $100 when you qualify for any Eastern Checking Account.</p>
 			<div class="table-header">
 				<div class="column">

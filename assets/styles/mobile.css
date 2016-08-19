@@ -1,0 +1,678 @@
+/*mobile.css*/
+
+
+@media (min-width: 769px) and (max-width: 1000px){
+	.free-checking-account-hero {
+	    background: url("../images/hero-background.jpg") no-repeat;
+	    background-position: -213px 90px;
+	}
+
+	.get-started .form {
+	    margin-top: 10px;
+	}
+
+	.email-address {
+	    width: 125px;
+	}
+}
+
+
+@media (max-width: 768px){
+	nav {
+    float: right;
+    margin-top: 25px;
+    position: relative;
+    z-index: 3;
+    overflow: hidden;
+    width: 90px;
+    left: 88%;
+    padding-top: 4px;
+    margin-right: inherit;
+}
+
+	.free-checking-account-goodies {
+	    /* padding-bottom: 20px; */
+	}	
+
+	.column h3{
+		width:100%;
+	}
+
+	.column br{
+		display: none;
+	}
+
+	.spacer{
+		display: block;
+	}
+
+	.sticky-wrapper {
+	    /* clear: left; */
+	    float: left;
+	    height: 70px;
+	    margin-top: 60px;
+	    position: relative;
+	    width: 100%;
+	    margin-top: -36px;
+	}	
+
+	.free-checking-account-options .column h3 {
+	    margin-left: 50%;
+	}	
+
+	nav li:first-child:after {
+	    content: " ";
+	}	
+
+	.locate-branch{
+		color: transparent;
+		font-family: 'glyphs';
+		text-align: right;
+		position: absolute;
+		right: -61px;
+	}	
+
+	.locate-branch:before{
+		content: "\e948";
+		font-size: 48px;
+		font-family: 'glyphs';
+		color: #ec8323;
+	}	
+
+	.call:before {
+	    content: "\e900";
+	    font-size: 48px;
+	    font-family: 'glyphs';
+	    color: #ec8323;
+	    transform: rotate(-149deg);
+	    -webkit-transform: rotate(-149deg);
+	    position: absolute;
+	    -moz-transform: rotate(-149deg);
+	    -o-transform: rotate(-149deg);
+	    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=-149);
+	}
+
+	.sticker p {
+	    display: block;
+	}
+
+	.call{
+		color: transparent;
+		font-family: 'glyphs';
+		text-align: right;
+		right: 50px;
+		position: absolute;
+	}	
+
+	.free-checking-account-options .column:nth-child(1){
+		/* display: none; */
+		/* float: left; */
+		margin-top: -54px;
+		position: absolute;
+		width: 100%;
+		/* background: #003366; */
+		left: 0px;
+	}
+
+	.free-checking-account-options .table-header {
+		margin-bottom:10%;
+	}
+
+
+	.free-checking-account-options h2 {
+	    float: left;
+	    margin-bottom: 30px;
+	    margin-right: initial;
+	    text-align: center;
+	    width: 96%;
+	    /* padding-right: 7%; */
+	    font-size: 1.8rem;
+	    line-height: 1.1em;
+	    margin-top: -19px;
+	}
+	
+	.free-checking-account-goodies .emphasize:before{
+		display:block;
+	}
+
+	.free-checking-account-goodies h2 {
+	    margin-bottom: 60px;
+	    text-align: center;
+	    font-size: 1.8rem;
+	    width: auto;
+	    padding-right: 0px;
+	    line-height: 1.2em;
+	}	
+
+	.free-checking-account-goodies {
+	    /* margin-top: -20%; */
+	}
+	.get-started .form{
+		display: none!important;
+	}
+
+	.get-started h1 {
+	    font-size: 2rem;
+	}
+
+	.table-header .column p{
+		display:none;
+	}
+
+	.get-started p{
+	    width: 91%;
+	    padding-left: 8%;
+	    text-align: left;
+	}
+
+	.free-checking-account-hero {
+	    float: left;
+	    min-height: 540px;
+	    max-height: inherit;
+	    position: relative;
+	    width: 100%;
+	    margin-top: 11%;
+	    padding-bottom: 70px;
+	    background: url("../images/hero-mobile.jpg") no-repeat 10% 2%;
+	    padding-top: 0%;
+	}
+
+	html{
+ 		overflow-y: auto!important;
+	}
+
+	body {
+	    margin: 0 auto;
+	    max-width: none!important;
+	    min-width: initial;
+	    overflow: auto!important;
+	}
+
+	.sticker.fixed {
+	    position: relative;
+	}
+
+	.free-checking-account-goodies .column {
+	    display: table-cell;
+	    text-align: center;
+	    width: 100%;
+	    float: left;
+	    margin-bottom: 12%;
+	    padding-right: 6%;
+	}
+
+	.eastern-bank {
+	    margin-left: 10%!important;
+	    margin-top: -2%;
+	    position: absolute;
+	    top: -8%;
+	}
+
+	.get-started {
+	    clear: both!important;
+	    float: left!important;
+	    padding: 0px!important;
+	    margin-right: auto;
+	    text-align: center;
+	    width: 100%!important;
+	    margin-top: 51%!important;
+	    float: left;
+	}
+	nav {
+	    top: -13%;
+	    right: -11%;
+	    position: absolute!important;
+	}
+
+	.free-checking-account-options h2 + p {
+	    width: 90%;
+	}
+
+	.first p{
+		color:#fff;
+		background: #003366;
+	}
+
+
+	.table-header .column img[src='assets/images/free-checking-account-options-icon-1.png']{
+		display: none;
+	}
+
+	.free-checking-account-options .table-body p {
+	    border-top: 0px;
+	    height: 57px;
+	    line-height: 57px;
+	    margin-bottom: 56px;
+	    text-align: center;
+	    border-bottom: 0px!important;
+	    padding-top: 0px;
+	}
+
+	.free-checking-account-options .column {
+	    width: 33%;
+	}
+
+
+
+	.get-started {
+    margin-top: 80%!important;
+	}
+
+	.eastern-bank {
+	    margin-left: 3%!important;
+	    margin-top: 1%;
+	    position: absolute;
+	    top: -8%;
+	}
+
+	.free-checking-account-options .column h3 {
+	     margin-left: auto; 
+	}
+
+	nav {
+	    top: -10%;
+	    right: -6%;
+	    position: absolute!important;
+	}
+
+}
+
+@media (min-width: 564px) and (max-width: 767px){
+
+	.call {
+	    color: transparent;
+	    font-family: 'glyphs';
+	    text-align: right;
+	    right: 45px;
+	    position: absolute;
+	}
+
+	.call:before {
+	    content: "\e900";
+	    font-size: 43px;
+	    font-family: 'glyphs';
+	    color: #ec8323;
+	}
+
+	.locate-branch:before {
+	    content: "\e948";
+	    font-size: 43px;
+	    font-family: 'glyphs';
+	    color: #ec8323;
+	}
+
+	.form-wrapper {
+	    display: block;
+	    margin: 0 auto;
+	    padding-left: 6%;
+	}
+
+	.sticky-wrapper {
+		height: 125px;
+	}	
+	.sticker {
+	    max-height: inherit;
+	}
+
+	.free-checking-account-hero {
+	    float: left;
+	    min-height: 540px;
+	    max-height: inherit;
+	    position: relative;
+	    width: 100%;
+	    margin-top: 18%;
+	    padding-bottom: 70px;
+	    background: url("../images/hero-mobile.jpg") no-repeat 51% 2%;
+	    padding-top: 23%;
+	    background-size: 100% 60%;
+	}
+
+	.get-started {
+	    margin-top: 46%!important;
+	    margin-bottom: -27px;
+ 	}
+
+	.eastern-bank {
+	    margin-left: 3%!important;
+	    margin-top: -5%;
+	    position: absolute;
+	    top: -8%;
+	}
+
+	.free-checking-account-options .column h3 {
+	     margin-left: auto; 
+	}
+
+	nav {
+	    top: -17%;
+	    right: -4%;
+	    position: absolute!important;
+	}
+
+}
+
+@media (min-width: 414px) and (max-width: 563px){
+		.free-checking-account-goodies{
+		padding-bottom:2px;
+		padding-top:40px;
+	}
+
+	.icon-check {
+	    font-size: 33px;
+	}
+
+	.icon-close {
+	    font-size: 20px;
+	}	
+
+	.call {
+	    color: transparent;
+	    font-family: 'glyphs';
+	    text-align: right;
+	    right: 43px;
+	    position: absolute;
+	}
+
+	.call:before {
+	    content: "\e900";
+	    font-size: 43px;
+	    font-family: 'glyphs';
+	    color: #ec8323;
+	    transform: rotate(-149deg);
+	    -webkit-transform: rotate(-149deg);
+	      /* IE */
+	      /* Opera */
+	    position: absolute;
+	    -moz-transform: rotate(-149deg);
+	    -o-transform: rotate(-149deg);
+	    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=-149);
+	}
+
+	.locate-branch:before {
+	    content: "\e948";
+	    font-size: 43px;
+	    font-family: 'glyphs';
+	    color: #ec8323;
+	}
+
+	.form-wrapper {
+	    display: block;
+	    margin: 0 auto;
+	    padding-left: 8%;
+	}
+
+	.sticky-wrapper {
+		height: 125px;
+	}	
+	.sticker {
+	    max-height: inherit;
+	}
+
+	.free-checking-account-hero {
+	    float: left;
+	    min-height: 540px;
+	    max-height: inherit;
+	    position: relative;
+	    width: 100%;
+	    margin-top: 18%;
+	    padding-bottom: 70px;
+	    background: url("../images/hero-mobile.jpg") no-repeat 51% 2%;
+	    padding-top: 23%;
+	    background-size: 100% 50%;
+	}
+
+	.get-started {
+	    margin-top: 49%!important;
+	    margin-bottom: -27px;
+	 }
+
+	.eastern-bank {
+	    margin-left: 3%!important;
+	    margin-top: -3%;
+	    position: absolute;
+	    top: -8%;
+	}
+
+	.free-checking-account-options .column h3 {
+	     margin-left: auto;
+	     margin-top: -28px;
+	     font-size: 1.3rem;
+	     padding-bottom: 10px;
+	}
+
+	nav {
+	    top: -15%;
+	    position: absolute!important;
+	    left: 78%;
+	}
+
+}
+
+
+@media (min-width: 375px) and (max-width: 413px){
+	.free-checking-account-options .column h3 {
+		margin-left: auto;
+		margin-top: -28px;
+		font-size: 0.8rem;
+	}
+	
+	.free-checking-account-goodies{
+		padding-bottom:6px;
+		padding-top:40px;
+	}
+
+	.icon-check {
+	    font-size: 20px;
+	}
+
+	.icon-close {
+	    font-size: 20px;
+	}		
+
+	.locate-branch {
+	    color: transparent;
+	    font-family: 'glyphs';
+	    text-align: right;
+	    position: absolute;
+	    right: -56px;
+	}
+
+	.call{
+		color: transparent;
+		font-family: 'glyphs';
+		text-align: right;
+		right: 28px;
+		position: absolute;
+	}	
+
+	.call:before,.locate-branch:before{
+		font-size:30px;
+	}
+	
+
+	.form-wrapper {
+	    display: block;
+	    margin: 0 auto;
+	    padding-left: 6%;
+	}
+
+	.sticky-wrapper {
+		height: 125px;
+	}	
+	.sticker {
+	    max-height: inherit;
+	}
+
+	.free-checking-account-hero {
+	    float: left;
+	    min-height: 540px;
+	    max-height: inherit;
+	    position: relative;
+	    width: 100%;
+	    margin-top: 14%;
+	    padding-bottom: 70px;
+	    background: url("../images/hero-mobile.jpg") no-repeat 51% 2%;
+	    padding-top: 35%;
+	    background-size: 100% 44%;
+	}
+
+	.get-started {
+    	margin-top: 48%!important;
+	}
+
+	.eastern-bank {
+	    left: 0%!important;
+	    margin-top: 2%;
+	    position: absolute;
+	    top: -8%;
+	}
+
+	.eastern-bank img{
+	    max-width:80%;
+	}
+
+	.free-checking-account-options .column h3 {
+	     margin-left: auto;
+	     font-size: 1.2rem;
+	     line-height: 1.2em;
+	     padding-bottom: 15px;
+	}
+
+	nav {
+	    top: -12%;
+	    position: absolute!important;
+	    /* right: -14%; */
+	    left: 75%;
+	}
+
+	.sticker p {
+	    display: block;
+	    font-size:0.9rem;
+	    padding-left: 11%;
+	}	
+
+	.email-address{
+		padding-left: 8%;
+		width: 183px;
+	}
+
+}
+
+@media (min-width: 320px) and (max-width: 374px){
+
+	.get-started h1 {
+	    font-size: 1.7rem;
+	    line-height:1.3em;
+	}
+
+
+	.icon-check {
+	    font-size: 20px;
+	}
+
+	.icon-close {
+	    font-size: 20px;
+	}	
+
+	.eastern-bank img{
+	    max-width:80%;
+	}	
+
+	.sticker p {
+		display: block;
+		font-size:0.9rem;
+	}	
+
+	.email-address{
+		font-size: 1.1rem;
+		width: 50%;
+	}
+
+	.call {
+	    color: transparent;
+	    font-family: 'glyphs';
+	    text-align: right;
+	    right: 32px;
+	    position:absolute;
+	}
+
+	.call:before {
+	    font-size: 36px;
+	    font-family: 'glyphs';
+	    color: #ec8323;
+	}	
+
+
+	.locate-branch:before {
+	    content: "\e948";
+	    font-size: 36px;
+	    font-family: 'glyphs';
+	    color: #ec8323;
+	}
+	.form-wrapper {
+	    display: block;
+	    margin: 0 auto;
+	    padding-left: 4%;
+	}
+
+	.sticky-wrapper {
+		height: 125px;
+	}	
+	.sticker {
+	    max-height: inherit;
+	}
+
+	.free-checking-account-hero {
+	    float: left;
+	    min-height: 540px;
+	    max-height: inherit;
+	    position: relative;
+	    width: 100%;
+	    margin-top: 19%;
+	    padding-bottom: 64px;
+	    background: url("../images/hero-mobile.jpg") no-repeat 51% 2%;
+	    padding-top: 35%;
+	    background-size: 100% 217px;
+	}
+
+	.free-checking-account-goodies {
+		background: url("../images/free-checking-account-goodies-background.jpg");
+		background-size: cover;
+		float: left;
+		padding-bottom: 10px;
+		padding-top: 38px;
+		position: relative;
+		width: 100%;
+		margin-top: -60px;
+	}
+
+	.free-checking-account-options {
+		padding-top: 66px;
+	}
+	
+	.get-started {
+    	margin-top: 38%!important;
+  	}
+
+	.eastern-bank {
+	    margin-left: 4%!important;
+	    margin-top: 0%;
+	    position: absolute;
+	    top: -9%;
+	}
+
+	.free-checking-account-options .column h3 {
+	     margin-left: auto;
+	     margin-top: -20px;
+	     margin-bottom: 33px;
+	     font-size: 1.1rem;
+	     line-height: 1.1em;
+	}
+
+	nav {
+	    top: -15%;
+	    position: absolute!important;
+	    left: 72%;
+	}
+
+}
